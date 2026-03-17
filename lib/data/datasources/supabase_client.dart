@@ -1,15 +1,17 @@
+import 'dart:io';
+
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/config/supabase_config.dart';
 
-class SupabaseClient {
-  static SupabaseClient? _instance;
+class SupabaseService {
+  static SupabaseService? _instance;
   late final SupabaseClient _supabase;
 
-  SupabaseClient._internal();
+  SupabaseService._internal();
 
-  factory SupabaseClient() {
-    _instance ??= SupabaseClient._internal();
+  factory SupabaseService() {
+    _instance ??= SupabaseService._internal();
     return _instance!;
   }
 
@@ -24,7 +26,7 @@ class SupabaseClient {
   }
 
   /// Get the current user session
-  AuthSession? get currentSession => _supabase.auth.currentSession;
+  Session? get currentSession => _supabase.auth.currentSession;
 
   /// Get the current user
   User? get currentUser => _supabase.auth.currentUser;
@@ -64,10 +66,10 @@ class SupabaseClient {
     required String userId,
     required String filePath,
   }) async {
-    final file = await supabase.storage
+    await supabase.storage
         .from('avatars')
-        .upload('$userId.jpg', filePath, fileOptions: const FileOptions(upsert: true));
-    return file.path;
+        .upload('$userId.jpg', File(filePath), fileOptions: const FileOptions(upsert: true));
+    return '$userId.jpg';
   }
 
   /// Get avatar URL
