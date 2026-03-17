@@ -44,6 +44,9 @@ dependencies:
   # UI & Fonts
   google_fonts: ^6.1.0
 
+  # Routing
+  go_router: ^13.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

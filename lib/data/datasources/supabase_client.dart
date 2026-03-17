@@ -4,7 +4,7 @@ import '../../core/config/supabase_config.dart';
 
 class SupabaseClient {
   static SupabaseClient? _instance;
-  late final Supabase _supabase;
+  late final SupabaseClient _supabase;
 
   SupabaseClient._internal();
 
@@ -13,7 +13,7 @@ class SupabaseClient {
     return _instance!;
   }
 
-  Supabase get supabase => _supabase;
+  SupabaseClient get supabase => _supabase;
 
   Future<void> initialize() async {
     await Supabase.initialize(
