@@ -12,7 +12,7 @@ void main() async {
   await dotenv.load(fileName: '.env');
 
   // Initialize Supabase
-  await SupabaseService().initialize();
+  await SupabaseInit.initialize();
 
   runApp(const LynxLotteryApp());
 }
