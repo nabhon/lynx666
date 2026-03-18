@@ -2,6 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/entities.dart';
 import 'repository_providers.dart';
 import 'auth_providers.dart';
+import 'profile_providers.dart';
 
 part 'bet_providers.g.dart';
 

@@ -79,14 +79,15 @@ class BetRepository implements IBetRepository {
     var query = _supabase
         .from('bets')
         .select()
-        .eq('user_id', userId)
-        .order('created_at', ascending: false);
+        .eq('user_id', userId);
 
     if (status != null) {
       query = query.eq('status', status.value);
     }
 
-    final response = await query.range((page - 1) * limit, page * limit - 1);
+    final response = await query
+        .order('created_at', ascending: false)
+        .range((page - 1) * limit, page * limit - 1);
     return (response as List)
         .map((e) => BetModel.fromSupabase(e).toEntity())
         .toList();
@@ -174,11 +175,12 @@ class BetRepository implements IBetRepository {
   Future<int> getUserBetCountForDraw(String userId, String drawId) async {
     final response = await _supabase
         .from('bets')
-        .select('id', count: CountOption.exact)
+        .select('id')
         .eq('user_id', userId)
-        .eq('lottery_draw_id', drawId);
+        .eq('lottery_draw_id', drawId)
+        .count(CountOption.exact);
 
-    return (response as dynamic).count ?? 0;
+    return response.count;
   }
 
   @override

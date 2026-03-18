@@ -96,14 +96,15 @@ class LotteryRepository implements ILotteryRepository {
   }) async {
     var query = _supabase
         .from('lottery_draws')
-        .select()
-        .order('draw_number', ascending: false);
+        .select();
 
     if (status != null) {
       query = query.eq('status', status.value);
     }
 
-    final response = await query.range((page - 1) * limit, page * limit - 1);
+    final response = await query
+        .order('draw_number', ascending: false)
+        .range((page - 1) * limit, page * limit - 1);
     return (response as List)
         .map((e) => LotteryDrawModel.fromSupabase(e).toEntity())
         .toList();

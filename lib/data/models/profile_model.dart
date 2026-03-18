@@ -74,6 +74,7 @@ class ProfileModel extends Profile {
   }
 
   /// Create a copy of this ProfileModel with updated fields
+  @override
   ProfileModel copyWith({
     String? id,
     String? email,

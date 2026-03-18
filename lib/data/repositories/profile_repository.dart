@@ -20,8 +20,6 @@ class ProfileRepository implements IProfileRepository {
           .isFilter('deleted_at', null)
           .single();
 
-      if (response == null) return null;
-
       final model = ProfileModel.fromSupabase(response);
       return model.toEntity();
     } on PostgrestException catch (e) {
