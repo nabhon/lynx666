@@ -1,7 +1,3 @@
-/// Data Repositories
-/// 
-/// Repositories handle data operations and convert between models and entities.
-
 export 'irepositories.dart';
 export 'auth_repository.dart';
 export 'profile_repository.dart';

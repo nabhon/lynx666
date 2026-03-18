@@ -61,8 +61,6 @@ class LotteryRepository implements ILotteryRepository {
           .eq('id', drawId)
           .single();
 
-      if (response == null) return null;
-
       final model = LotteryDrawModel.fromSupabase(response);
       return model.toEntity();
     } on PostgrestException catch (e) {
@@ -99,14 +97,13 @@ class LotteryRepository implements ILotteryRepository {
     var query = _supabase
         .from('lottery_draws')
         .select()
-        .order('draw_number', ascending: false)
-        .range((page - 1) * limit, page * limit - 1);
+        .order('draw_number', ascending: false);
 
     if (status != null) {
       query = query.eq('status', status.value);
     }
 
-    final response = await query;
+    final response = await query.range((page - 1) * limit, page * limit - 1);
     return (response as List)
         .map((e) => LotteryDrawModel.fromSupabase(e).toEntity())
         .toList();

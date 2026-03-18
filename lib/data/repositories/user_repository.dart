@@ -51,7 +51,7 @@ class UserRepository implements IUserRepository {
           .from('profiles')
           .select()
           .eq('id', userId)
-          .is_('deleted_at', null)
+          .isFilter('deleted_at', null)
           .maybeSingle();
 
       if (response == null) return null;
@@ -69,8 +69,8 @@ class UserRepository implements IUserRepository {
     final response = await _supabase
         .from('profiles')
         .select()
-        .in_('id', userIds)
-        .is_('deleted_at', null);
+        .inFilter('id', userIds)
+        .isFilter('deleted_at', null);
 
     return (response as List)
         .map((e) => ProfileModel.fromSupabase(e).toEntity())
@@ -83,7 +83,7 @@ class UserRepository implements IUserRepository {
         .from('profiles')
         .select()
         .ilike('username', '%$query%')
-        .is_('deleted_at', null)
+        .isFilter('deleted_at', null)
         .eq('status', 'ACTIVE')
         .limit(limit);
 

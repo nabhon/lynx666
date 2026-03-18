@@ -1,8 +1,3 @@
-/// Domain Entities
-/// 
-/// Entities represent the core business objects used throughout the application.
-/// They are pure Dart classes without any framework dependencies.
-
 export 'enums.dart';
 export 'profile.dart';
 export 'lottery_draw.dart';

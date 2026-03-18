@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/entities.dart';
 import 'repository_providers.dart';
@@ -103,7 +102,7 @@ class BetById extends _$BetById {
 @riverpod
 class PlaceBet extends _$PlaceBet {
   @override
-  Future<Bet?> build() => null;
+  Future<Bet?> build() => Future.value(null);
 
   /// Place a new bet
   Future<Bet?> placeBet({
@@ -115,7 +114,7 @@ class PlaceBet extends _$PlaceBet {
     if (userId == null) throw Exception('Not authenticated');
 
     state = const AsyncValue.loading();
-    
+
     final result = await AsyncValue.guard(() async {
       final repository = ref.read(betRepositoryProvider);
       return await repository.placeBet(

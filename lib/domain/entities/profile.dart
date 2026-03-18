@@ -35,6 +35,33 @@ class Profile {
   /// Get avatar URL (if avatarKey exists)
   String? get avatarUrl => avatarKey;
 
+  /// Create a copy of this Profile with updated fields
+  Profile copyWith({
+    String? id,
+    String? email,
+    String? username,
+    String? avatarKey,
+    double? balance,
+    ProfileStatus? status,
+    bool? isOnboardingComplete,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+  }) {
+    return Profile(
+      id: id ?? this.id,
+      email: email ?? this.email,
+      username: username ?? this.username,
+      avatarKey: avatarKey ?? this.avatarKey,
+      balance: balance ?? this.balance,
+      status: status ?? this.status,
+      isOnboardingComplete: isOnboardingComplete ?? this.isOnboardingComplete,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+    );
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||

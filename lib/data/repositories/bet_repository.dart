@@ -80,14 +80,13 @@ class BetRepository implements IBetRepository {
         .from('bets')
         .select()
         .eq('user_id', userId)
-        .order('created_at', ascending: false)
-        .range((page - 1) * limit, page * limit - 1);
+        .order('created_at', ascending: false);
 
     if (status != null) {
       query = query.eq('status', status.value);
     }
 
-    final response = await query;
+    final response = await query.range((page - 1) * limit, page * limit - 1);
     return (response as List)
         .map((e) => BetModel.fromSupabase(e).toEntity())
         .toList();
@@ -179,7 +178,7 @@ class BetRepository implements IBetRepository {
         .eq('user_id', userId)
         .eq('lottery_draw_id', drawId);
 
-    return response.count ?? 0;
+    return (response as dynamic).count ?? 0;
   }
 
   @override

@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/entities.dart';
 import 'repository_providers.dart';
@@ -56,13 +55,11 @@ class LotteryCountdown extends _$LotteryCountdown {
   Duration build() {
     // This will be updated by a timer in the UI
     final nextDraw = ref.watch(nextLotteryDrawProvider);
-    return nextDraw.whenData(
-      (draw) {
-        if (draw == null) return Duration.zero;
-        final duration = draw.scheduledTime.difference(DateTime.now());
-        return duration.isNegative ? Duration.zero : duration;
-      },
-    ) ?? Duration.zero;
+    final draw = nextDraw.value;
+    if (draw == null) return Duration.zero;
+    
+    final duration = draw.scheduledTime.difference(DateTime.now());
+    return duration.isNegative ? Duration.zero : duration;
   }
 
   /// Update countdown (call this every second from UI)

@@ -17,7 +17,7 @@ class ProfileRepository implements IProfileRepository {
           .from('profiles')
           .select()
           .eq('id', userId)
-          .is_('deleted_at', null)
+          .isFilter('deleted_at', null)
           .single();
 
       if (response == null) return null;
@@ -79,7 +79,7 @@ class ProfileRepository implements IProfileRepository {
           .from('profiles')
           .select('id')
           .eq('username', username)
-          .is_('deleted_at', null)
+          .isFilter('deleted_at', null)
           .maybeSingle();
 
       return response == null;

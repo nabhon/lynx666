@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/entities.dart';
 import 'repository_providers.dart';
@@ -74,7 +73,7 @@ class UserStatsProvider extends _$UserStatsProvider {
 
 /// Current user's stats provider
 final currentUserStatsProvider = Provider.family<UserStats?, String>((ref, userId) {
-  return ref.watch(userStatsProviderProvider(userId)).whenData((s) => s);
+  return ref.watch(userStatsProviderProvider(userId)).value;
 });
 
 /// User by ID provider

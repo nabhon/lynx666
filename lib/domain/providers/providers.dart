@@ -1,7 +1,3 @@
-/// Domain Providers
-/// 
-/// Riverpod providers for state management and dependency injection.
-
 export 'repository_providers.dart';
 export 'auth_providers.dart';
 export 'profile_providers.dart';

@@ -1,8 +1,3 @@
-/// Repository Interfaces
-/// 
-/// Define contracts for data access operations.
-/// All repositories implement these interfaces.
-
 export 'i_auth_repository.dart';
 export 'i_profile_repository.dart';
 export 'i_lottery_repository.dart';

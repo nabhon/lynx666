@@ -1,4 +1,3 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/entities.dart';
 import 'repository_providers.dart';
@@ -100,5 +99,5 @@ class OnboardingStatus extends _$OnboardingStatus {
 /// Profile balance provider (derived from UserProfile)
 final profileBalanceProvider = Provider<double>((ref) {
   final profile = ref.watch(userProfileProvider);
-  return profile.whenData((p) => p?.balance ?? 0.0) ?? 0.0;
+  return profile.value?.balance ?? 0.0;
 });
