@@ -38,6 +38,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final profile = ref.watch(userProfileProvider);
+    final latestDraw = ref.watch(latestLotteryDrawProvider);
     final nextDraw = ref.watch(nextLotteryDrawProvider);
     final countdown = ref.watch(lotteryCountdownProvider);
     final pendingBets = ref.watch(userPendingBetsProvider);
@@ -56,10 +57,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 _buildHeader(profile),
                 
                 const SizedBox(height: 24),
-                
-                // Current Draw Section
-                _buildCurrentDraw(nextDraw),
-                
+
+                // Current Draw Section (Latest Completed Draw)
+                _buildCurrentDraw(latestDraw),
+
                 const SizedBox(height: 16),
                 
                 // Countdown Timer Section
@@ -176,17 +177,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  /// Current Draw Section with 6-digit number
-  Widget _buildCurrentDraw(AsyncValue<LotteryDraw?> nextDraw) {
-    return nextDraw.when(
+  /// Current Draw Section with 6-digit winning numbers
+  Widget _buildCurrentDraw(AsyncValue<LotteryDraw?> latestDraw) {
+    return latestDraw.when(
       data: (draw) {
-        final drawNumber = draw?.drawNumber ?? 0;
-        final formattedNumber = drawNumber.toString().padLeft(6, '0');
+        // Get winning numbers from completed draw
+        final winningNumbers = draw?.winningNumbers ?? [];
+        final digits = winningNumbers.isNotEmpty
+            ? winningNumbers.map((n) => n.toString()).toList()
+            : List.filled(6, '0');
 
         return Column(
           children: [
             const Text(
-              'งวดปัจจุบัน',
+              'เลขล่าสุด',
               style: TextStyle(
                 color: Color(0xFF757575),
                 fontSize: 14,
@@ -219,9 +223,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildDigitBox(formattedNumber[0]),
-                        _buildDigitBox(formattedNumber[1]),
-                        _buildDigitBox(formattedNumber[2]),
+                        _buildDigitBox(digits.length > 0 ? digits[0] : '0'),
+                        _buildDigitBox(digits.length > 1 ? digits[1] : '0'),
+                        _buildDigitBox(digits.length > 2 ? digits[2] : '0'),
                       ],
                     ),
                   ),
@@ -230,9 +234,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        _buildDigitBox(formattedNumber[3]),
-                        _buildDigitBox(formattedNumber[4]),
-                        _buildDigitBox(formattedNumber[5]),
+                        _buildDigitBox(digits.length > 3 ? digits[3] : '0'),
+                        _buildDigitBox(digits.length > 4 ? digits[4] : '0'),
+                        _buildDigitBox(digits.length > 5 ? digits[5] : '0'),
                       ],
                     ),
                   ),
