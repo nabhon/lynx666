@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:go_router/go_router.dart'; // ใช้ redirect
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,6 +17,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool _isLoading = false;
   bool _obscurePassword = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    /// ถ้า login อยู่แล้ว เข้าแอปเลย
+    final user = _supabase.auth.currentUser;
+    if (user != null) {
+      Future.microtask(() => context.go('/home'));
+    }
+  }
 
   @override
   void dispose() {
@@ -36,18 +48,15 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await _supabase.auth.signInWithPassword(
-        email: email,
-        password: password,
-      );
+      await _supabase.auth.signInWithPassword(email: email, password: password);
 
-      _showSnackBar("Login success 🎉");
+      _showSnackBar("เข้าสู่ระบบสำเร็จ");
 
-      // 👉 ไปหน้า home
-      // context.go('/home');
-
+      // เข้าแอป
+      context.go('/home');
+      
     } on AuthException catch (e) {
-      _showSnackBar(e.message);
+      _showSnackBar("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
     } catch (e) {
       _showSnackBar("เกิดข้อผิดพลาด");
     }
@@ -56,9 +65,9 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -75,30 +84,44 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   /// Title
                   const Text(
-                    "Welcome Back",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    "ยินดีต้อนรับสู่ Lynx666",
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    "Login to your account",
+                    "กรุณาเข้าสู่ระบบเพื่อเข้าถึงฟีเจอร์ทั้งหมดของแอป",
                     style: TextStyle(color: Colors.grey),
                   ),
 
                   const SizedBox(height: 40),
 
                   /// Email
-                  const Text("Email"),
+                  const Text("อีเมล"),
                   const SizedBox(height: 8),
+
                   TextField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
+                    style: const TextStyle(fontSize: 16),
+
                     decoration: InputDecoration(
-                      hintText: "Enter your email",
+                      hintText: "กรอกอีเมลของคุณ",
+                      hintStyle: TextStyle(color: Colors.grey.shade400),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: const BorderSide(
+                          color: Color(0xFFFF8400),
+                          width: 2,
+                        ),
                       ),
                     ),
                   ),
@@ -106,16 +129,34 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 20),
 
                   /// Password
-                  const Text("Password"),
+                  const Text("รหัสผ่าน"),
                   const SizedBox(height: 8),
+                  
                   TextField(
                     controller: _passwordController,
                     obscureText: _obscurePassword,
+                    style: const TextStyle(fontSize: 16),
+
                     decoration: InputDecoration(
-                      hintText: "Enter your password",
+                      hintText: "กรอกรหัสผ่านของคุณ",
+                      hintStyle: TextStyle(color: Colors.grey.shade400),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(24),
                       ),
+
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(24),
+                        borderSide: const BorderSide(
+                          color: Color(0xFFFF8400),
+                          width: 2,
+                        ),
+                      ),
+
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword
@@ -133,28 +174,61 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const SizedBox(height: 30),
 
-                  /// Button
+                  /// Login Button
                   SizedBox(
                     width: double.infinity,
-                    height: 50,
+                    height: 48,
                     child: ElevatedButton(
                       onPressed: _isLoading ? null : _login,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFF8400),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                       ),
                       child: _isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : const Text(
-                              "Login",
+                              "เข้าสู่ระบบ",
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.3,
                               ),
                             ),
                     ),
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// Register Section
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("ยังไม่มีบัญชี? "),
+                      GestureDetector(
+                        onTap: () {
+                          context.go('/register');
+                        },
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.person_add,
+                              size: 18,
+                              color: Color(0xFFFF8400),
+                            ),
+                            SizedBox(width: 6),
+                            Text(
+                              "สมัครสมาชิก",
+                              style: TextStyle(
+                                color: Color(0xFFFF8400),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
