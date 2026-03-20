@@ -6,404 +6,405 @@ part of 'bet_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$userBetHistoryHash() => r'5aea3af0eb28a62d632c8ed025ffcd2446b44d31';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$UserBetHistory
-    extends BuildlessAutoDisposeAsyncNotifier<List<Bet>> {
-  late final BetStatus? filter;
-
-  FutureOr<List<Bet>> build({
-    BetStatus? filter,
-  });
-}
-
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 /// User's bet history provider
-///
-/// Copied from [UserBetHistory].
+
 @ProviderFor(UserBetHistory)
-const userBetHistoryProvider = UserBetHistoryFamily();
+final userBetHistoryProvider = UserBetHistoryFamily._();
 
 /// User's bet history provider
-///
-/// Copied from [UserBetHistory].
-class UserBetHistoryFamily extends Family<AsyncValue<List<Bet>>> {
+final class UserBetHistoryProvider
+    extends $AsyncNotifierProvider<UserBetHistory, List<Bet>> {
   /// User's bet history provider
-  ///
-  /// Copied from [UserBetHistory].
-  const UserBetHistoryFamily();
+  UserBetHistoryProvider._({
+    required UserBetHistoryFamily super.from,
+    required BetStatus? super.argument,
+  }) : super(
+         retry: null,
+         name: r'userBetHistoryProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// User's bet history provider
-  ///
-  /// Copied from [UserBetHistory].
-  UserBetHistoryProvider call({
-    BetStatus? filter,
-  }) {
-    return UserBetHistoryProvider(
-      filter: filter,
-    );
+  @override
+  String debugGetCreateSourceHash() => _$userBetHistoryHash();
+
+  @override
+  String toString() {
+    return r'userBetHistoryProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  UserBetHistoryProvider getProviderOverride(
-    covariant UserBetHistoryProvider provider,
-  ) {
-    return call(
-      filter: provider.filter,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'userBetHistoryProvider';
-}
-
-/// User's bet history provider
-///
-/// Copied from [UserBetHistory].
-class UserBetHistoryProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<UserBetHistory, List<Bet>> {
-  /// User's bet history provider
-  ///
-  /// Copied from [UserBetHistory].
-  UserBetHistoryProvider({
-    BetStatus? filter,
-  }) : this._internal(
-          () => UserBetHistory()..filter = filter,
-          from: userBetHistoryProvider,
-          name: r'userBetHistoryProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$userBetHistoryHash,
-          dependencies: UserBetHistoryFamily._dependencies,
-          allTransitiveDependencies:
-              UserBetHistoryFamily._allTransitiveDependencies,
-          filter: filter,
-        );
-
-  UserBetHistoryProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.filter,
-  }) : super.internal();
-
-  final BetStatus? filter;
-
-  @override
-  FutureOr<List<Bet>> runNotifierBuild(
-    covariant UserBetHistory notifier,
-  ) {
-    return notifier.build(
-      filter: filter,
-    );
-  }
-
-  @override
-  Override overrideWith(UserBetHistory Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: UserBetHistoryProvider._internal(
-        () => create()..filter = filter,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        filter: filter,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeAsyncNotifierProviderElement<UserBetHistory, List<Bet>>
-      createElement() {
-    return _UserBetHistoryProviderElement(this);
-  }
+  UserBetHistory create() => UserBetHistory();
 
   @override
   bool operator ==(Object other) {
-    return other is UserBetHistoryProvider && other.filter == filter;
+    return other is UserBetHistoryProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, filter.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-mixin UserBetHistoryRef on AutoDisposeAsyncNotifierProviderRef<List<Bet>> {
-  /// The parameter `filter` of this provider.
-  BetStatus? get filter;
-}
+String _$userBetHistoryHash() => r'5aea3af0eb28a62d632c8ed025ffcd2446b44d31';
 
-class _UserBetHistoryProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<UserBetHistory, List<Bet>>
-    with UserBetHistoryRef {
-  _UserBetHistoryProviderElement(super.provider);
+/// User's bet history provider
+
+final class UserBetHistoryFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          UserBetHistory,
+          AsyncValue<List<Bet>>,
+          List<Bet>,
+          FutureOr<List<Bet>>,
+          BetStatus?
+        > {
+  UserBetHistoryFamily._()
+    : super(
+        retry: null,
+        name: r'userBetHistoryProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// User's bet history provider
+
+  UserBetHistoryProvider call({BetStatus? filter}) =>
+      UserBetHistoryProvider._(argument: filter, from: this);
 
   @override
-  BetStatus? get filter => (origin as UserBetHistoryProvider).filter;
+  String toString() => r'userBetHistoryProvider';
+}
+
+/// User's bet history provider
+
+abstract class _$UserBetHistory extends $AsyncNotifier<List<Bet>> {
+  late final _$args = ref.$arg as BetStatus?;
+  BetStatus? get filter => _$args;
+
+  FutureOr<List<Bet>> build({BetStatus? filter});
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<List<Bet>>, List<Bet>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<Bet>>, List<Bet>>,
+              AsyncValue<List<Bet>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(filter: _$args));
+  }
+}
+
+/// User's pending bets provider
+
+@ProviderFor(UserPendingBets)
+final userPendingBetsProvider = UserPendingBetsProvider._();
+
+/// User's pending bets provider
+final class UserPendingBetsProvider
+    extends $AsyncNotifierProvider<UserPendingBets, List<Bet>> {
+  /// User's pending bets provider
+  UserPendingBetsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userPendingBetsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userPendingBetsHash();
+
+  @$internal
+  @override
+  UserPendingBets create() => UserPendingBets();
 }
 
 String _$userPendingBetsHash() => r'68fb855852ed82714ddf85652ab050e7c8256e1f';
 
 /// User's pending bets provider
-///
-/// Copied from [UserPendingBets].
-@ProviderFor(UserPendingBets)
-final userPendingBetsProvider =
-    AutoDisposeAsyncNotifierProvider<UserPendingBets, List<Bet>>.internal(
-  UserPendingBets.new,
-  name: r'userPendingBetsProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$userPendingBetsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$UserPendingBets = AutoDisposeAsyncNotifier<List<Bet>>;
+abstract class _$UserPendingBets extends $AsyncNotifier<List<Bet>> {
+  FutureOr<List<Bet>> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<List<Bet>>, List<Bet>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<Bet>>, List<Bet>>,
+              AsyncValue<List<Bet>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// User's won bets provider
+
+@ProviderFor(UserWonBets)
+final userWonBetsProvider = UserWonBetsProvider._();
+
+/// User's won bets provider
+final class UserWonBetsProvider
+    extends $AsyncNotifierProvider<UserWonBets, List<Bet>> {
+  /// User's won bets provider
+  UserWonBetsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'userWonBetsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$userWonBetsHash();
+
+  @$internal
+  @override
+  UserWonBets create() => UserWonBets();
+}
+
 String _$userWonBetsHash() => r'887d04f8fdf5f9071ca8d58e47ab9b2edb215fd0';
 
 /// User's won bets provider
-///
-/// Copied from [UserWonBets].
-@ProviderFor(UserWonBets)
-final userWonBetsProvider =
-    AutoDisposeAsyncNotifierProvider<UserWonBets, List<Bet>>.internal(
-  UserWonBets.new,
-  name: r'userWonBetsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$userWonBetsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$UserWonBets = AutoDisposeAsyncNotifier<List<Bet>>;
-String _$betByIdHash() => r'cd4df55f0095dd41c412ef4b675bcace570d45f2';
-
-abstract class _$BetById extends BuildlessAutoDisposeAsyncNotifier<Bet?> {
-  late final String betId;
-
-  FutureOr<Bet?> build(
-    String betId,
-  );
+abstract class _$UserWonBets extends $AsyncNotifier<List<Bet>> {
+  FutureOr<List<Bet>> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<List<Bet>>, List<Bet>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<Bet>>, List<Bet>>,
+              AsyncValue<List<Bet>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
 }
 
 /// Single bet provider
-///
-/// Copied from [BetById].
+
 @ProviderFor(BetById)
-const betByIdProvider = BetByIdFamily();
+final betByIdProvider = BetByIdFamily._();
 
 /// Single bet provider
-///
-/// Copied from [BetById].
-class BetByIdFamily extends Family<AsyncValue<Bet?>> {
+final class BetByIdProvider extends $AsyncNotifierProvider<BetById, Bet?> {
   /// Single bet provider
-  ///
-  /// Copied from [BetById].
-  const BetByIdFamily();
+  BetByIdProvider._({
+    required BetByIdFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'betByIdProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// Single bet provider
-  ///
-  /// Copied from [BetById].
-  BetByIdProvider call(
-    String betId,
-  ) {
-    return BetByIdProvider(
-      betId,
-    );
+  @override
+  String debugGetCreateSourceHash() => _$betByIdHash();
+
+  @override
+  String toString() {
+    return r'betByIdProvider'
+        ''
+        '($argument)';
   }
 
+  @$internal
   @override
-  BetByIdProvider getProviderOverride(
-    covariant BetByIdProvider provider,
-  ) {
-    return call(
-      provider.betId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'betByIdProvider';
-}
-
-/// Single bet provider
-///
-/// Copied from [BetById].
-class BetByIdProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<BetById, Bet?> {
-  /// Single bet provider
-  ///
-  /// Copied from [BetById].
-  BetByIdProvider(
-    String betId,
-  ) : this._internal(
-          () => BetById()..betId = betId,
-          from: betByIdProvider,
-          name: r'betByIdProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$betByIdHash,
-          dependencies: BetByIdFamily._dependencies,
-          allTransitiveDependencies: BetByIdFamily._allTransitiveDependencies,
-          betId: betId,
-        );
-
-  BetByIdProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.betId,
-  }) : super.internal();
-
-  final String betId;
-
-  @override
-  FutureOr<Bet?> runNotifierBuild(
-    covariant BetById notifier,
-  ) {
-    return notifier.build(
-      betId,
-    );
-  }
-
-  @override
-  Override overrideWith(BetById Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: BetByIdProvider._internal(
-        () => create()..betId = betId,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        betId: betId,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeAsyncNotifierProviderElement<BetById, Bet?> createElement() {
-    return _BetByIdProviderElement(this);
-  }
+  BetById create() => BetById();
 
   @override
   bool operator ==(Object other) {
-    return other is BetByIdProvider && other.betId == betId;
+    return other is BetByIdProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, betId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-mixin BetByIdRef on AutoDisposeAsyncNotifierProviderRef<Bet?> {
-  /// The parameter `betId` of this provider.
-  String get betId;
-}
+String _$betByIdHash() => r'cd4df55f0095dd41c412ef4b675bcace570d45f2';
 
-class _BetByIdProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<BetById, Bet?>
-    with BetByIdRef {
-  _BetByIdProviderElement(super.provider);
+/// Single bet provider
+
+final class BetByIdFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          BetById,
+          AsyncValue<Bet?>,
+          Bet?,
+          FutureOr<Bet?>,
+          String
+        > {
+  BetByIdFamily._()
+    : super(
+        retry: null,
+        name: r'betByIdProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Single bet provider
+
+  BetByIdProvider call(String betId) =>
+      BetByIdProvider._(argument: betId, from: this);
 
   @override
-  String get betId => (origin as BetByIdProvider).betId;
+  String toString() => r'betByIdProvider';
 }
 
-String _$placeBetHash() => r'27ffa041e128d05d2d72cbb9929415b108e05b9d';
+/// Single bet provider
+
+abstract class _$BetById extends $AsyncNotifier<Bet?> {
+  late final _$args = ref.$arg as String;
+  String get betId => _$args;
+
+  FutureOr<Bet?> build(String betId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<Bet?>, Bet?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<Bet?>, Bet?>,
+              AsyncValue<Bet?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}
 
 /// Place bet provider - handles placing a new bet
-///
-/// Copied from [PlaceBet].
-@ProviderFor(PlaceBet)
-final placeBetProvider =
-    AutoDisposeAsyncNotifierProvider<PlaceBet, Bet?>.internal(
-  PlaceBet.new,
-  name: r'placeBetProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$placeBetHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$PlaceBet = AutoDisposeAsyncNotifier<Bet?>;
+@ProviderFor(PlaceBet)
+final placeBetProvider = PlaceBetProvider._();
+
+/// Place bet provider - handles placing a new bet
+final class PlaceBetProvider extends $AsyncNotifierProvider<PlaceBet, Bet?> {
+  /// Place bet provider - handles placing a new bet
+  PlaceBetProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'placeBetProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$placeBetHash();
+
+  @$internal
+  @override
+  PlaceBet create() => PlaceBet();
+}
+
+String _$placeBetHash() => r'325e4be16609f1da2bcb36c97c226866a97f043f';
+
+/// Place bet provider - handles placing a new bet
+
+abstract class _$PlaceBet extends $AsyncNotifier<Bet?> {
+  FutureOr<Bet?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<Bet?>, Bet?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<Bet?>, Bet?>,
+              AsyncValue<Bet?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+/// Bet statistics provider
+
+@ProviderFor(BetStats)
+final betStatsProvider = BetStatsProvider._();
+
+/// Bet statistics provider
+final class BetStatsProvider
+    extends $AsyncNotifierProvider<BetStats, Map<String, dynamic>> {
+  /// Bet statistics provider
+  BetStatsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'betStatsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$betStatsHash();
+
+  @$internal
+  @override
+  BetStats create() => BetStats();
+}
+
 String _$betStatsHash() => r'66a454575a38afe9e6dfd40a13da833813e0e98b';
 
 /// Bet statistics provider
-///
-/// Copied from [BetStats].
-@ProviderFor(BetStats)
-final betStatsProvider =
-    AutoDisposeAsyncNotifierProvider<BetStats, Map<String, dynamic>>.internal(
-  BetStats.new,
-  name: r'betStatsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$betStatsHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
 
-typedef _$BetStats = AutoDisposeAsyncNotifier<Map<String, dynamic>>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+abstract class _$BetStats extends $AsyncNotifier<Map<String, dynamic>> {
+  FutureOr<Map<String, dynamic>> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<Map<String, dynamic>>, Map<String, dynamic>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<Map<String, dynamic>>,
+                Map<String, dynamic>
+              >,
+              AsyncValue<Map<String, dynamic>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

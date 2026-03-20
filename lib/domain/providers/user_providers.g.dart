@@ -6,825 +6,622 @@ part of 'user_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$leaderboardHash() => r'8f3617f17cea0685d697355bf2d4aa6aa4f30cf1';
-
-/// Copied from Dart SDK
-class _SystemHash {
-  _SystemHash._();
-
-  static int combine(int hash, int value) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + value);
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x0007ffff & hash) << 10));
-    return hash ^ (hash >> 6);
-  }
-
-  static int finish(int hash) {
-    // ignore: parameter_assignments
-    hash = 0x1fffffff & (hash + ((0x03ffffff & hash) << 3));
-    // ignore: parameter_assignments
-    hash = hash ^ (hash >> 11);
-    return 0x1fffffff & (hash + ((0x00003fff & hash) << 15));
-  }
-}
-
-abstract class _$Leaderboard
-    extends BuildlessAutoDisposeAsyncNotifier<List<LeaderboardEntry>> {
-  late final int page;
-  late final int limit;
-
-  FutureOr<List<LeaderboardEntry>> build({
-    int page = 1,
-    int limit = 50,
-  });
-}
-
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
 /// Leaderboard provider
-///
-/// Copied from [Leaderboard].
+
 @ProviderFor(Leaderboard)
-const leaderboardProvider = LeaderboardFamily();
+final leaderboardProvider = LeaderboardFamily._();
 
 /// Leaderboard provider
-///
-/// Copied from [Leaderboard].
-class LeaderboardFamily extends Family<AsyncValue<List<LeaderboardEntry>>> {
+final class LeaderboardProvider
+    extends $AsyncNotifierProvider<Leaderboard, List<LeaderboardEntry>> {
   /// Leaderboard provider
-  ///
-  /// Copied from [Leaderboard].
-  const LeaderboardFamily();
+  LeaderboardProvider._({
+    required LeaderboardFamily super.from,
+    required ({int page, int limit}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'leaderboardProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
-  /// Leaderboard provider
-  ///
-  /// Copied from [Leaderboard].
-  LeaderboardProvider call({
-    int page = 1,
-    int limit = 50,
-  }) {
-    return LeaderboardProvider(
-      page: page,
-      limit: limit,
-    );
+  @override
+  String debugGetCreateSourceHash() => _$leaderboardHash();
+
+  @override
+  String toString() {
+    return r'leaderboardProvider'
+        ''
+        '$argument';
   }
 
+  @$internal
   @override
-  LeaderboardProvider getProviderOverride(
-    covariant LeaderboardProvider provider,
-  ) {
-    return call(
-      page: provider.page,
-      limit: provider.limit,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'leaderboardProvider';
-}
-
-/// Leaderboard provider
-///
-/// Copied from [Leaderboard].
-class LeaderboardProvider extends AutoDisposeAsyncNotifierProviderImpl<
-    Leaderboard, List<LeaderboardEntry>> {
-  /// Leaderboard provider
-  ///
-  /// Copied from [Leaderboard].
-  LeaderboardProvider({
-    int page = 1,
-    int limit = 50,
-  }) : this._internal(
-          () => Leaderboard()
-            ..page = page
-            ..limit = limit,
-          from: leaderboardProvider,
-          name: r'leaderboardProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$leaderboardHash,
-          dependencies: LeaderboardFamily._dependencies,
-          allTransitiveDependencies:
-              LeaderboardFamily._allTransitiveDependencies,
-          page: page,
-          limit: limit,
-        );
-
-  LeaderboardProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.page,
-    required this.limit,
-  }) : super.internal();
-
-  final int page;
-  final int limit;
-
-  @override
-  FutureOr<List<LeaderboardEntry>> runNotifierBuild(
-    covariant Leaderboard notifier,
-  ) {
-    return notifier.build(
-      page: page,
-      limit: limit,
-    );
-  }
-
-  @override
-  Override overrideWith(Leaderboard Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: LeaderboardProvider._internal(
-        () => create()
-          ..page = page
-          ..limit = limit,
-        from: from,
-        name: null,
-        dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        page: page,
-        limit: limit,
-      ),
-    );
-  }
-
-  @override
-  AutoDisposeAsyncNotifierProviderElement<Leaderboard, List<LeaderboardEntry>>
-      createElement() {
-    return _LeaderboardProviderElement(this);
-  }
+  Leaderboard create() => Leaderboard();
 
   @override
   bool operator ==(Object other) {
-    return other is LeaderboardProvider &&
-        other.page == page &&
-        other.limit == limit;
+    return other is LeaderboardProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, page.hashCode);
-    hash = _SystemHash.combine(hash, limit.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-mixin LeaderboardRef
-    on AutoDisposeAsyncNotifierProviderRef<List<LeaderboardEntry>> {
-  /// The parameter `page` of this provider.
-  int get page;
+String _$leaderboardHash() => r'8f3617f17cea0685d697355bf2d4aa6aa4f30cf1';
 
-  /// The parameter `limit` of this provider.
-  int get limit;
+/// Leaderboard provider
+
+final class LeaderboardFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          Leaderboard,
+          AsyncValue<List<LeaderboardEntry>>,
+          List<LeaderboardEntry>,
+          FutureOr<List<LeaderboardEntry>>,
+          ({int page, int limit})
+        > {
+  LeaderboardFamily._()
+    : super(
+        retry: null,
+        name: r'leaderboardProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Leaderboard provider
+
+  LeaderboardProvider call({int page = 1, int limit = 50}) =>
+      LeaderboardProvider._(argument: (page: page, limit: limit), from: this);
+
+  @override
+  String toString() => r'leaderboardProvider';
 }
 
-class _LeaderboardProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<Leaderboard,
-        List<LeaderboardEntry>> with LeaderboardRef {
-  _LeaderboardProviderElement(super.provider);
+/// Leaderboard provider
+
+abstract class _$Leaderboard extends $AsyncNotifier<List<LeaderboardEntry>> {
+  late final _$args = ref.$arg as ({int page, int limit});
+  int get page => _$args.page;
+  int get limit => _$args.limit;
+
+  FutureOr<List<LeaderboardEntry>> build({int page = 1, int limit = 50});
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<List<LeaderboardEntry>>, List<LeaderboardEntry>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<LeaderboardEntry>>,
+                List<LeaderboardEntry>
+              >,
+              AsyncValue<List<LeaderboardEntry>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(
+      ref,
+      () => build(page: _$args.page, limit: _$args.limit),
+    );
+  }
+}
+
+/// Top users provider (limited)
+
+@ProviderFor(TopUsers)
+final topUsersProvider = TopUsersFamily._();
+
+/// Top users provider (limited)
+final class TopUsersProvider
+    extends $AsyncNotifierProvider<TopUsers, List<LeaderboardEntry>> {
+  /// Top users provider (limited)
+  TopUsersProvider._({
+    required TopUsersFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'topUsersProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  int get page => (origin as LeaderboardProvider).page;
+  String debugGetCreateSourceHash() => _$topUsersHash();
+
   @override
-  int get limit => (origin as LeaderboardProvider).limit;
+  String toString() {
+    return r'topUsersProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  TopUsers create() => TopUsers();
+
+  @override
+  bool operator ==(Object other) {
+    return other is TopUsersProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$topUsersHash() => r'b3e7f0cbda62bf954b1634deb60e5f00f2ea2cdf';
 
-abstract class _$TopUsers
-    extends BuildlessAutoDisposeAsyncNotifier<List<LeaderboardEntry>> {
-  late final int limit;
-
-  FutureOr<List<LeaderboardEntry>> build({
-    int limit = 10,
-  });
-}
-
 /// Top users provider (limited)
-///
-/// Copied from [TopUsers].
-@ProviderFor(TopUsers)
-const topUsersProvider = TopUsersFamily();
 
-/// Top users provider (limited)
-///
-/// Copied from [TopUsers].
-class TopUsersFamily extends Family<AsyncValue<List<LeaderboardEntry>>> {
-  /// Top users provider (limited)
-  ///
-  /// Copied from [TopUsers].
-  const TopUsersFamily();
-
-  /// Top users provider (limited)
-  ///
-  /// Copied from [TopUsers].
-  TopUsersProvider call({
-    int limit = 10,
-  }) {
-    return TopUsersProvider(
-      limit: limit,
-    );
-  }
-
-  @override
-  TopUsersProvider getProviderOverride(
-    covariant TopUsersProvider provider,
-  ) {
-    return call(
-      limit: provider.limit,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'topUsersProvider';
-}
-
-/// Top users provider (limited)
-///
-/// Copied from [TopUsers].
-class TopUsersProvider extends AutoDisposeAsyncNotifierProviderImpl<TopUsers,
-    List<LeaderboardEntry>> {
-  /// Top users provider (limited)
-  ///
-  /// Copied from [TopUsers].
-  TopUsersProvider({
-    int limit = 10,
-  }) : this._internal(
-          () => TopUsers()..limit = limit,
-          from: topUsersProvider,
-          name: r'topUsersProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$topUsersHash,
-          dependencies: TopUsersFamily._dependencies,
-          allTransitiveDependencies: TopUsersFamily._allTransitiveDependencies,
-          limit: limit,
-        );
-
-  TopUsersProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.limit,
-  }) : super.internal();
-
-  final int limit;
-
-  @override
-  FutureOr<List<LeaderboardEntry>> runNotifierBuild(
-    covariant TopUsers notifier,
-  ) {
-    return notifier.build(
-      limit: limit,
-    );
-  }
-
-  @override
-  Override overrideWith(TopUsers Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: TopUsersProvider._internal(
-        () => create()..limit = limit,
-        from: from,
-        name: null,
+final class TopUsersFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          TopUsers,
+          AsyncValue<List<LeaderboardEntry>>,
+          List<LeaderboardEntry>,
+          FutureOr<List<LeaderboardEntry>>,
+          int
+        > {
+  TopUsersFamily._()
+    : super(
+        retry: null,
+        name: r'topUsersProvider',
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        limit: limit,
-      ),
-    );
-  }
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Top users provider (limited)
+
+  TopUsersProvider call({int limit = 10}) =>
+      TopUsersProvider._(argument: limit, from: this);
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<TopUsers, List<LeaderboardEntry>>
-      createElement() {
-    return _TopUsersProviderElement(this);
+  String toString() => r'topUsersProvider';
+}
+
+/// Top users provider (limited)
+
+abstract class _$TopUsers extends $AsyncNotifier<List<LeaderboardEntry>> {
+  late final _$args = ref.$arg as int;
+  int get limit => _$args;
+
+  FutureOr<List<LeaderboardEntry>> build({int limit = 10});
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<List<LeaderboardEntry>>, List<LeaderboardEntry>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<LeaderboardEntry>>,
+                List<LeaderboardEntry>
+              >,
+              AsyncValue<List<LeaderboardEntry>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(limit: _$args));
   }
+}
+
+/// User stats provider
+
+@ProviderFor(UserStatsProvider)
+final userStatsProviderProvider = UserStatsProviderFamily._();
+
+/// User stats provider
+final class UserStatsProviderProvider
+    extends $AsyncNotifierProvider<UserStatsProvider, UserStats?> {
+  /// User stats provider
+  UserStatsProviderProvider._({
+    required UserStatsProviderFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'userStatsProviderProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$userStatsProviderHash();
+
+  @override
+  String toString() {
+    return r'userStatsProviderProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  UserStatsProvider create() => UserStatsProvider();
 
   @override
   bool operator ==(Object other) {
-    return other is TopUsersProvider && other.limit == limit;
+    return other is UserStatsProviderProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, limit.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
-}
-
-mixin TopUsersRef
-    on AutoDisposeAsyncNotifierProviderRef<List<LeaderboardEntry>> {
-  /// The parameter `limit` of this provider.
-  int get limit;
-}
-
-class _TopUsersProviderElement extends AutoDisposeAsyncNotifierProviderElement<
-    TopUsers, List<LeaderboardEntry>> with TopUsersRef {
-  _TopUsersProviderElement(super.provider);
-
-  @override
-  int get limit => (origin as TopUsersProvider).limit;
 }
 
 String _$userStatsProviderHash() => r'53c6abf6711e83349b026fc1a15bf9915e5fb41e';
 
-abstract class _$UserStatsProvider
-    extends BuildlessAutoDisposeAsyncNotifier<UserStats?> {
-  late final String userId;
-
-  FutureOr<UserStats?> build(
-    String userId,
-  );
-}
-
 /// User stats provider
-///
-/// Copied from [UserStatsProvider].
-@ProviderFor(UserStatsProvider)
-const userStatsProviderProvider = UserStatsProviderFamily();
 
-/// User stats provider
-///
-/// Copied from [UserStatsProvider].
-class UserStatsProviderFamily extends Family<AsyncValue<UserStats?>> {
-  /// User stats provider
-  ///
-  /// Copied from [UserStatsProvider].
-  const UserStatsProviderFamily();
-
-  /// User stats provider
-  ///
-  /// Copied from [UserStatsProvider].
-  UserStatsProviderProvider call(
-    String userId,
-  ) {
-    return UserStatsProviderProvider(
-      userId,
-    );
-  }
-
-  @override
-  UserStatsProviderProvider getProviderOverride(
-    covariant UserStatsProviderProvider provider,
-  ) {
-    return call(
-      provider.userId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'userStatsProviderProvider';
-}
-
-/// User stats provider
-///
-/// Copied from [UserStatsProvider].
-class UserStatsProviderProvider extends AutoDisposeAsyncNotifierProviderImpl<
-    UserStatsProvider, UserStats?> {
-  /// User stats provider
-  ///
-  /// Copied from [UserStatsProvider].
-  UserStatsProviderProvider(
-    String userId,
-  ) : this._internal(
-          () => UserStatsProvider()..userId = userId,
-          from: userStatsProviderProvider,
-          name: r'userStatsProviderProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$userStatsProviderHash,
-          dependencies: UserStatsProviderFamily._dependencies,
-          allTransitiveDependencies:
-              UserStatsProviderFamily._allTransitiveDependencies,
-          userId: userId,
-        );
-
-  UserStatsProviderProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.userId,
-  }) : super.internal();
-
-  final String userId;
-
-  @override
-  FutureOr<UserStats?> runNotifierBuild(
-    covariant UserStatsProvider notifier,
-  ) {
-    return notifier.build(
-      userId,
-    );
-  }
-
-  @override
-  Override overrideWith(UserStatsProvider Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: UserStatsProviderProvider._internal(
-        () => create()..userId = userId,
-        from: from,
-        name: null,
+final class UserStatsProviderFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          UserStatsProvider,
+          AsyncValue<UserStats?>,
+          UserStats?,
+          FutureOr<UserStats?>,
+          String
+        > {
+  UserStatsProviderFamily._()
+    : super(
+        retry: null,
+        name: r'userStatsProviderProvider',
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        userId: userId,
-      ),
-    );
-  }
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// User stats provider
+
+  UserStatsProviderProvider call(String userId) =>
+      UserStatsProviderProvider._(argument: userId, from: this);
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<UserStatsProvider, UserStats?>
-      createElement() {
-    return _UserStatsProviderProviderElement(this);
+  String toString() => r'userStatsProviderProvider';
+}
+
+/// User stats provider
+
+abstract class _$UserStatsProvider extends $AsyncNotifier<UserStats?> {
+  late final _$args = ref.$arg as String;
+  String get userId => _$args;
+
+  FutureOr<UserStats?> build(String userId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<UserStats?>, UserStats?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<UserStats?>, UserStats?>,
+              AsyncValue<UserStats?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}
+
+/// Current user's stats provider
+
+@ProviderFor(CurrentUserStatsProvider)
+final currentUserStatsProviderProvider = CurrentUserStatsProviderFamily._();
+
+/// Current user's stats provider
+final class CurrentUserStatsProviderProvider
+    extends $NotifierProvider<CurrentUserStatsProvider, UserStats?> {
+  /// Current user's stats provider
+  CurrentUserStatsProviderProvider._({
+    required CurrentUserStatsProviderFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'currentUserStatsProviderProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentUserStatsProviderHash();
+
+  @override
+  String toString() {
+    return r'currentUserStatsProviderProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  CurrentUserStatsProvider create() => CurrentUserStatsProvider();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UserStats? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UserStats?>(value),
+    );
   }
 
   @override
   bool operator ==(Object other) {
-    return other is UserStatsProviderProvider && other.userId == userId;
+    return other is CurrentUserStatsProviderProvider &&
+        other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, userId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
 }
 
-mixin UserStatsProviderRef on AutoDisposeAsyncNotifierProviderRef<UserStats?> {
-  /// The parameter `userId` of this provider.
-  String get userId;
-}
+String _$currentUserStatsProviderHash() =>
+    r'5b048a72cb36dc3996dfbce92edac61b37fd0df0';
 
-class _UserStatsProviderProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<UserStatsProvider,
-        UserStats?> with UserStatsProviderRef {
-  _UserStatsProviderProviderElement(super.provider);
+/// Current user's stats provider
+
+final class CurrentUserStatsProviderFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          CurrentUserStatsProvider,
+          UserStats?,
+          UserStats?,
+          UserStats?,
+          String
+        > {
+  CurrentUserStatsProviderFamily._()
+    : super(
+        retry: null,
+        name: r'currentUserStatsProviderProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Current user's stats provider
+
+  CurrentUserStatsProviderProvider call(String userId) =>
+      CurrentUserStatsProviderProvider._(argument: userId, from: this);
 
   @override
-  String get userId => (origin as UserStatsProviderProvider).userId;
+  String toString() => r'currentUserStatsProviderProvider';
+}
+
+/// Current user's stats provider
+
+abstract class _$CurrentUserStatsProvider extends $Notifier<UserStats?> {
+  late final _$args = ref.$arg as String;
+  String get userId => _$args;
+
+  UserStats? build(String userId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<UserStats?, UserStats?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<UserStats?, UserStats?>,
+              UserStats?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}
+
+/// User by ID provider
+
+@ProviderFor(UserById)
+final userByIdProvider = UserByIdFamily._();
+
+/// User by ID provider
+final class UserByIdProvider
+    extends $AsyncNotifierProvider<UserById, Profile?> {
+  /// User by ID provider
+  UserByIdProvider._({
+    required UserByIdFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'userByIdProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$userByIdHash();
+
+  @override
+  String toString() {
+    return r'userByIdProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  UserById create() => UserById();
+
+  @override
+  bool operator ==(Object other) {
+    return other is UserByIdProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$userByIdHash() => r'f025f53770c1516ae71b2e5d68ac8f295d46bf34';
 
-abstract class _$UserById extends BuildlessAutoDisposeAsyncNotifier<Profile?> {
-  late final String userId;
-
-  FutureOr<Profile?> build(
-    String userId,
-  );
-}
-
 /// User by ID provider
-///
-/// Copied from [UserById].
-@ProviderFor(UserById)
-const userByIdProvider = UserByIdFamily();
 
-/// User by ID provider
-///
-/// Copied from [UserById].
-class UserByIdFamily extends Family<AsyncValue<Profile?>> {
-  /// User by ID provider
-  ///
-  /// Copied from [UserById].
-  const UserByIdFamily();
-
-  /// User by ID provider
-  ///
-  /// Copied from [UserById].
-  UserByIdProvider call(
-    String userId,
-  ) {
-    return UserByIdProvider(
-      userId,
-    );
-  }
-
-  @override
-  UserByIdProvider getProviderOverride(
-    covariant UserByIdProvider provider,
-  ) {
-    return call(
-      provider.userId,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'userByIdProvider';
-}
-
-/// User by ID provider
-///
-/// Copied from [UserById].
-class UserByIdProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<UserById, Profile?> {
-  /// User by ID provider
-  ///
-  /// Copied from [UserById].
-  UserByIdProvider(
-    String userId,
-  ) : this._internal(
-          () => UserById()..userId = userId,
-          from: userByIdProvider,
-          name: r'userByIdProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$userByIdHash,
-          dependencies: UserByIdFamily._dependencies,
-          allTransitiveDependencies: UserByIdFamily._allTransitiveDependencies,
-          userId: userId,
-        );
-
-  UserByIdProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.userId,
-  }) : super.internal();
-
-  final String userId;
-
-  @override
-  FutureOr<Profile?> runNotifierBuild(
-    covariant UserById notifier,
-  ) {
-    return notifier.build(
-      userId,
-    );
-  }
-
-  @override
-  Override overrideWith(UserById Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: UserByIdProvider._internal(
-        () => create()..userId = userId,
-        from: from,
-        name: null,
+final class UserByIdFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          UserById,
+          AsyncValue<Profile?>,
+          Profile?,
+          FutureOr<Profile?>,
+          String
+        > {
+  UserByIdFamily._()
+    : super(
+        retry: null,
+        name: r'userByIdProvider',
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        userId: userId,
-      ),
-    );
-  }
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// User by ID provider
+
+  UserByIdProvider call(String userId) =>
+      UserByIdProvider._(argument: userId, from: this);
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<UserById, Profile?> createElement() {
-    return _UserByIdProviderElement(this);
+  String toString() => r'userByIdProvider';
+}
+
+/// User by ID provider
+
+abstract class _$UserById extends $AsyncNotifier<Profile?> {
+  late final _$args = ref.$arg as String;
+  String get userId => _$args;
+
+  FutureOr<Profile?> build(String userId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<Profile?>, Profile?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<Profile?>, Profile?>,
+              AsyncValue<Profile?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
   }
+}
+
+/// Search users provider
+
+@ProviderFor(SearchUsers)
+final searchUsersProvider = SearchUsersFamily._();
+
+/// Search users provider
+final class SearchUsersProvider
+    extends $AsyncNotifierProvider<SearchUsers, List<Profile>> {
+  /// Search users provider
+  SearchUsersProvider._({
+    required SearchUsersFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'searchUsersProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchUsersHash();
+
+  @override
+  String toString() {
+    return r'searchUsersProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  SearchUsers create() => SearchUsers();
 
   @override
   bool operator ==(Object other) {
-    return other is UserByIdProvider && other.userId == userId;
+    return other is SearchUsersProvider && other.argument == argument;
   }
 
   @override
   int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, userId.hashCode);
-
-    return _SystemHash.finish(hash);
+    return argument.hashCode;
   }
-}
-
-mixin UserByIdRef on AutoDisposeAsyncNotifierProviderRef<Profile?> {
-  /// The parameter `userId` of this provider.
-  String get userId;
-}
-
-class _UserByIdProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<UserById, Profile?>
-    with UserByIdRef {
-  _UserByIdProviderElement(super.provider);
-
-  @override
-  String get userId => (origin as UserByIdProvider).userId;
 }
 
 String _$searchUsersHash() => r'2a32c539cde1bf27c9ae4538b785a61847a581d0';
 
-abstract class _$SearchUsers
-    extends BuildlessAutoDisposeAsyncNotifier<List<Profile>> {
-  late final String query;
-
-  FutureOr<List<Profile>> build(
-    String query,
-  );
-}
-
 /// Search users provider
-///
-/// Copied from [SearchUsers].
-@ProviderFor(SearchUsers)
-const searchUsersProvider = SearchUsersFamily();
 
-/// Search users provider
-///
-/// Copied from [SearchUsers].
-class SearchUsersFamily extends Family<AsyncValue<List<Profile>>> {
-  /// Search users provider
-  ///
-  /// Copied from [SearchUsers].
-  const SearchUsersFamily();
-
-  /// Search users provider
-  ///
-  /// Copied from [SearchUsers].
-  SearchUsersProvider call(
-    String query,
-  ) {
-    return SearchUsersProvider(
-      query,
-    );
-  }
-
-  @override
-  SearchUsersProvider getProviderOverride(
-    covariant SearchUsersProvider provider,
-  ) {
-    return call(
-      provider.query,
-    );
-  }
-
-  static const Iterable<ProviderOrFamily>? _dependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get dependencies => _dependencies;
-
-  static const Iterable<ProviderOrFamily>? _allTransitiveDependencies = null;
-
-  @override
-  Iterable<ProviderOrFamily>? get allTransitiveDependencies =>
-      _allTransitiveDependencies;
-
-  @override
-  String? get name => r'searchUsersProvider';
-}
-
-/// Search users provider
-///
-/// Copied from [SearchUsers].
-class SearchUsersProvider
-    extends AutoDisposeAsyncNotifierProviderImpl<SearchUsers, List<Profile>> {
-  /// Search users provider
-  ///
-  /// Copied from [SearchUsers].
-  SearchUsersProvider(
-    String query,
-  ) : this._internal(
-          () => SearchUsers()..query = query,
-          from: searchUsersProvider,
-          name: r'searchUsersProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$searchUsersHash,
-          dependencies: SearchUsersFamily._dependencies,
-          allTransitiveDependencies:
-              SearchUsersFamily._allTransitiveDependencies,
-          query: query,
-        );
-
-  SearchUsersProvider._internal(
-    super._createNotifier, {
-    required super.name,
-    required super.dependencies,
-    required super.allTransitiveDependencies,
-    required super.debugGetCreateSourceHash,
-    required super.from,
-    required this.query,
-  }) : super.internal();
-
-  final String query;
-
-  @override
-  FutureOr<List<Profile>> runNotifierBuild(
-    covariant SearchUsers notifier,
-  ) {
-    return notifier.build(
-      query,
-    );
-  }
-
-  @override
-  Override overrideWith(SearchUsers Function() create) {
-    return ProviderOverride(
-      origin: this,
-      override: SearchUsersProvider._internal(
-        () => create()..query = query,
-        from: from,
-        name: null,
+final class SearchUsersFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          SearchUsers,
+          AsyncValue<List<Profile>>,
+          List<Profile>,
+          FutureOr<List<Profile>>,
+          String
+        > {
+  SearchUsersFamily._()
+    : super(
+        retry: null,
+        name: r'searchUsersProvider',
         dependencies: null,
-        allTransitiveDependencies: null,
-        debugGetCreateSourceHash: null,
-        query: query,
-      ),
-    );
-  }
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Search users provider
+
+  SearchUsersProvider call(String query) =>
+      SearchUsersProvider._(argument: query, from: this);
 
   @override
-  AutoDisposeAsyncNotifierProviderElement<SearchUsers, List<Profile>>
-      createElement() {
-    return _SearchUsersProviderElement(this);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is SearchUsersProvider && other.query == query;
-  }
-
-  @override
-  int get hashCode {
-    var hash = _SystemHash.combine(0, runtimeType.hashCode);
-    hash = _SystemHash.combine(hash, query.hashCode);
-
-    return _SystemHash.finish(hash);
-  }
+  String toString() => r'searchUsersProvider';
 }
 
-mixin SearchUsersRef on AutoDisposeAsyncNotifierProviderRef<List<Profile>> {
-  /// The parameter `query` of this provider.
-  String get query;
-}
+/// Search users provider
 
-class _SearchUsersProviderElement
-    extends AutoDisposeAsyncNotifierProviderElement<SearchUsers, List<Profile>>
-    with SearchUsersRef {
-  _SearchUsersProviderElement(super.provider);
+abstract class _$SearchUsers extends $AsyncNotifier<List<Profile>> {
+  late final _$args = ref.$arg as String;
+  String get query => _$args;
 
+  FutureOr<List<Profile>> build(String query);
+  @$mustCallSuper
   @override
-  String get query => (origin as SearchUsersProvider).query;
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<List<Profile>>, List<Profile>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<Profile>>, List<Profile>>,
+              AsyncValue<List<Profile>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
 }
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
