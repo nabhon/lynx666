@@ -142,8 +142,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildProfileImage(Profile? profile) {
     const double size = 50.0;
+    final avatarUrl = ref.watch(avatarUrlProvider);
 
-    if (profile?.avatarKey != null && profile!.avatarKey!.isNotEmpty) {
+    if (avatarUrl != null) {
       return Container(
         width: size,
         height: size,
@@ -151,7 +152,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           shape: BoxShape.circle,
           border: Border.all(color: const Color(0xFFFFB627), width: 2),
           image: DecorationImage(
-            image: NetworkImage(profile.avatarKey!),
+            image: NetworkImage(avatarUrl),
             fit: BoxFit.cover,
           ),
         ),
@@ -492,13 +493,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 end: Alignment.bottomCenter,
               ),
               borderRadius: BorderRadius.circular(8),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFFFFB627).withValues(alpha: 0.3),
-                  blurRadius: 6,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+
             ),
             child: Center(
               child: Text(

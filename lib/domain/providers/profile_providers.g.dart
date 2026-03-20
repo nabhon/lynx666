@@ -165,3 +165,60 @@ abstract class _$ProfileBalance extends $Notifier<double> {
     element.handleCreate(ref, build);
   }
 }
+
+/// Avatar URL provider - transforms avatarKey to public URL (cached)
+
+@ProviderFor(AvatarUrl)
+final avatarUrlProvider = AvatarUrlProvider._();
+
+/// Avatar URL provider - transforms avatarKey to public URL (cached)
+final class AvatarUrlProvider extends $NotifierProvider<AvatarUrl, String?> {
+  /// Avatar URL provider - transforms avatarKey to public URL (cached)
+  AvatarUrlProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'avatarUrlProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$avatarUrlHash();
+
+  @$internal
+  @override
+  AvatarUrl create() => AvatarUrl();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String? value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String?>(value),
+    );
+  }
+}
+
+String _$avatarUrlHash() => r'1a298bd901f1dbb1f1bcc81eecc952f1b43ee1f1';
+
+/// Avatar URL provider - transforms avatarKey to public URL (cached)
+
+abstract class _$AvatarUrl extends $Notifier<String?> {
+  String? build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<String?, String?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<String?, String?>,
+              String?,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
