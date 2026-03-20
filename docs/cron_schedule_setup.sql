@@ -5,8 +5,9 @@
 -- Run this in Supabase Dashboard > SQL Editor
 -- ============================================================
 
--- Enable pg_cron extension (if not already enabled)
+-- Enable required extensions
 CREATE EXTENSION IF NOT EXISTS pg_cron;
+CREATE EXTENSION IF NOT EXISTS pg_http;  -- Required for net.http_post
 
 -- ============================================================
 -- OPTION 1: Using pg_cron (Pro plan required)
