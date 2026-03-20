@@ -44,7 +44,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final betHistory = ref.watch(userBetHistoryProvider());
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0D1117),
+      backgroundColor: const Color(0xFFFAFAFA),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -106,7 +106,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildBalanceCard(double balance) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFFFF9505), Color(0xFFFFB627)],
@@ -114,13 +114,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFFFB627).withValues(alpha: 0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,9 +127,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 4),
           Text(
-            '฿${_formatNumber(balance)}',
+            '${_formatNumber(balance)}',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -173,7 +165,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: Border.all(color: const Color(0xFFFFB627), width: 2),
-        color: const Color(0xFF1F2937),
+        color: const Color(0xFFFAFAFA),
       ),
       child: const Icon(
         Icons.person,
@@ -195,7 +187,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const Text(
               'งวดปัจจุบัน',
               style: TextStyle(
-                color: Color(0xFF9CA3AF),
+                color: Color(0xFF757575),
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
               ),
@@ -203,12 +195,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(height: 8),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    const Color(0xFF1F2937),
-                    const Color(0xFF111827),
+                    const Color(0xFFFAFAFA),
+                    const Color(0xFFF0F0F0),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -218,13 +210,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   color: const Color(0xFFFFB627),
                   width: 1.5,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFFFFB627).withValues(alpha: 0.2),
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -239,7 +224,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(width: 24),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -272,13 +257,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           end: Alignment.bottomCenter,
         ),
         borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFFFB627).withValues(alpha: 0.4),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Center(
         child: Text(
@@ -300,7 +278,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         const Text(
           'งวดปัจจุบัน',
           style: TextStyle(
-            color: Color(0xFF9CA3AF),
+            color: Color(0xFF757575),
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ),
@@ -310,9 +288,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1F2937),
+            color: const Color(0xFFFAFAFA),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFF374151)),
+            border: Border.all(color: const Color(0xFFE0E0E0)),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -326,7 +304,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       width: 40,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF374151),
+                        color: const Color(0xFFE0E0E0),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
@@ -343,7 +321,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       width: 40,
                       height: 56,
                       decoration: BoxDecoration(
-                        color: const Color(0xFF374151),
+                        color: const Color(0xFFE0E0E0),
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
@@ -369,9 +347,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
+        color: const Color(0xFFFAFAFA),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF374151)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -385,7 +362,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           const Text(
             'เลขถัดไปใน ',
             style: TextStyle(
-              color: Color(0xFF9CA3AF),
+              color: Color(0xFF757575),
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
@@ -412,7 +389,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         const Text(
           'เลขของคุณ',
           style: TextStyle(
-            color: Colors.white,
+            color: Color(0xFF1A1A1A),
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -435,27 +412,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildNoBetCard() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
+        color: const Color(0xFFFAFAFA),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: const Color(0xFF374151),
-          style: BorderStyle.solid,
-        ),
       ),
       child: Column(
         children: [
           const Icon(
             Icons.casino_outlined,
-            color: Color(0xFF6B7280),
+            color: Color(0xFFBDBDBD),
             size: 48,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           const Text(
             'ยังไม่มีเลขของคุณ',
             style: TextStyle(
-              color: Color(0xFF9CA3AF),
+              color: Color(0xFF757575),
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
@@ -495,8 +468,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            const Color(0xFF1F2937),
-            const Color(0xFF111827),
+            const Color(0xFFFAFAFA),
+            const Color(0xFFF0F0F0),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -548,9 +521,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
+        color: const Color(0xFFFAFAFA),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF374151)),
+        border: Border.all(color: const Color(0xFFE0E0E0)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -561,7 +534,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             height: 44,
             margin: const EdgeInsets.only(right: 8),
             decoration: BoxDecoration(
-              color: const Color(0xFF374151),
+              color: const Color(0xFFE0E0E0),
               borderRadius: BorderRadius.circular(8),
             ),
           ),
@@ -578,7 +551,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         const Text(
           'ประวัติการแทง',
           style: TextStyle(
-            color: Colors.white,
+            color: Color(0xFF1A1A1A),
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -591,11 +564,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 .where((bet) => bet.status != BetStatus.pending)
                 .take(5)
                 .toList();
-            
+
             if (settledBets.isEmpty) {
               return _buildEmptyHistory();
             }
-            
+
             return ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -620,14 +593,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
+        color: const Color(0xFFFAFAFA),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isWin
               ? const Color(0xFFFFB627)
               : isLost
                   ? const Color(0xFFDC2626)
-                  : const Color(0xFF374151),
+                  : const Color(0xFFE0E0E0),
         ),
       ),
       child: Row(
@@ -641,7 +614,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ? const Color(0xFFFFB627).withValues(alpha: 0.2)
                   : isLost
                       ? const Color(0xFFDC2626).withValues(alpha: 0.2)
-                      : const Color(0xFF374151),
+                      : const Color(0xFFE0E0E0),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -650,7 +623,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ? const Color(0xFFFFB627)
                   : isLost
                       ? const Color(0xFFDC2626)
-                      : const Color(0xFF9CA3AF),
+                      : const Color(0xFF9E9E9E),
               size: 20,
             ),
           ),
@@ -671,13 +644,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF111827),
+                          color: const Color(0xFFF0F0F0),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
                           number.toString().padLeft(2, '0'),
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: Color(0xFF1A1A1A),
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
                           ),
@@ -689,7 +662,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Text(
                   'งวด: ${_formatDate(bet.createdAt)}',
                   style: const TextStyle(
-                    color: Color(0xFF6B7280),
+                    color: Color(0xFF9E9E9E),
                     fontSize: 11,
                   ),
                 ),
@@ -704,7 +677,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Text(
                 '฿${_formatNumber(bet.betAmount)}',
                 style: const TextStyle(
-                  color: Color(0xFF9CA3AF),
+                  color: Color(0xFF757575),
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
                 ),
@@ -739,15 +712,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
+        color: const Color(0xFFFAFAFA),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFF374151)),
+        border: Border.all(color: const Color(0xFFE0E0E0)),
       ),
       child: const Center(
         child: Text(
           'ยังไม่มีประวัติการแทง',
           style: TextStyle(
-            color: Color(0xFF6B7280),
+            color: Color(0xFF9E9E9E),
             fontSize: 14,
           ),
         ),
@@ -765,9 +738,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         return Container(
           height: 60,
           decoration: BoxDecoration(
-            color: const Color(0xFF1F2937),
+            color: const Color(0xFFFAFAFA),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: const Color(0xFF374151)),
+            border: Border.all(color: const Color(0xFFE0E0E0)),
           ),
         );
       },
