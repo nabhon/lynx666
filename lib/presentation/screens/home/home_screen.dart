@@ -109,14 +109,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF1A7F37), Color(0xFF2D9D4C)],
+          colors: [Color(0xFFFF9505), Color(0xFFFFB627)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF1A7F37).withValues(alpha: 0.3),
+            color: const Color(0xFFFFB627).withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -150,14 +150,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget _buildProfileImage(Profile? profile) {
     const double size = 50.0;
-    
+
     if (profile?.avatarKey != null && profile!.avatarKey!.isNotEmpty) {
       return Container(
         width: size,
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: Border.all(color: const Color(0xFF2D9D4C), width: 2),
+          border: Border.all(color: const Color(0xFFFFB627), width: 2),
           image: DecorationImage(
             image: NetworkImage(profile.avatarKey!),
             fit: BoxFit.cover,
@@ -165,19 +165,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       );
     }
-    
+
     // Default avatar
     return Container(
       width: size,
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: const Color(0xFF2D9D4C), width: 2),
+        border: Border.all(color: const Color(0xFFFFB627), width: 2),
         color: const Color(0xFF1F2937),
       ),
       child: const Icon(
         Icons.person,
-        color: Color(0xFF2D9D4C),
+        color: Color(0xFFFFB627),
         size: 28,
       ),
     );
@@ -189,7 +189,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       data: (draw) {
         final drawNumber = draw?.drawNumber ?? 0;
         final formattedNumber = drawNumber.toString().padLeft(6, '0');
-        
+
         return Column(
           children: [
             const Text(
@@ -202,6 +202,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             const SizedBox(height: 8),
             Container(
+              width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -214,31 +215,41 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: const Color(0xFF2D9D4C),
+                  color: const Color(0xFFFFB627),
                   width: 1.5,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF2D9D4C).withValues(alpha: 0.2),
+                    color: const Color(0xFFFFB627).withValues(alpha: 0.2),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),
                 ],
               ),
               child: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildDigitBox(formattedNumber[0]),
-                  const SizedBox(width: 8),
-                  _buildDigitBox(formattedNumber[1]),
-                  const SizedBox(width: 8),
-                  _buildDigitBox(formattedNumber[2]),
-                  const SizedBox(width: 16),
-                  _buildDigitBox(formattedNumber[3]),
-                  const SizedBox(width: 8),
-                  _buildDigitBox(formattedNumber[4]),
-                  const SizedBox(width: 8),
-                  _buildDigitBox(formattedNumber[5]),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildDigitBox(formattedNumber[0]),
+                        _buildDigitBox(formattedNumber[1]),
+                        _buildDigitBox(formattedNumber[2]),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        _buildDigitBox(formattedNumber[3]),
+                        _buildDigitBox(formattedNumber[4]),
+                        _buildDigitBox(formattedNumber[5]),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -256,14 +267,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       height: 56,
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF2D9D4C), Color(0xFF1A7F37)],
+          colors: [Color(0xFFFFB627), Color(0xFFFF9505)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF2D9D4C).withValues(alpha: 0.4),
+            color: const Color(0xFFFFB627).withValues(alpha: 0.4),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -296,6 +307,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
         const SizedBox(height: 8),
         Container(
+          width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           decoration: BoxDecoration(
             color: const Color(0xFF1F2937),
@@ -303,21 +315,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             border: Border.all(color: const Color(0xFF374151)),
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: List.generate(
-              6,
-              (index) => Container(
-                width: 40,
-                height: 56,
-                margin: index > 2 && index <= 3
-                    ? const EdgeInsets.only(left: 16)
-                    : const EdgeInsets.only(left: 8),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF374151),
-                  borderRadius: BorderRadius.circular(8),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(
+                    3,
+                    (index) => Container(
+                      width: 40,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF374151),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(width: 24),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(
+                    3,
+                    (index) => Container(
+                      width: 40,
+                      height: 56,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF374151),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -328,7 +361,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildCountdownTimer(Duration countdown) {
     final formatter = DateFormat('HH:mm:ss');
     final formattedTime = formatter.format(
-      DateTime(0, 1, 1, countdown.inHours, 
+      DateTime(0, 1, 1, countdown.inHours,
           (countdown.inMinutes % 60), (countdown.inSeconds % 60)),
     );
 
@@ -345,7 +378,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         children: [
           const Icon(
             Icons.access_time,
-            color: Color(0xFF2D9D4C),
+            color: Color(0xFFFFB627),
             size: 20,
           ),
           const SizedBox(width: 8),
@@ -360,7 +393,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Text(
             formattedTime,
             style: const TextStyle(
-              color: Color(0xFF2D9D4C),
+              color: Color(0xFFFFB627),
               fontSize: 16,
               fontWeight: FontWeight.bold,
               fontFamily: 'monospace',
@@ -431,7 +464,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ElevatedButton(
             onPressed: () => context.go('/place-bet'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF2D9D4C),
+              backgroundColor: const Color(0xFFFFB627),
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
               shape: RoundedRectangleBorder(
@@ -455,7 +488,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildBetNumbersCard(List<Bet> bets) {
     // Get all selected numbers from pending bets
     final allNumbers = bets.expand((bet) => bet.selectedNumbers).toList();
-    
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
@@ -469,7 +502,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           end: Alignment.bottomCenter,
         ),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFF2D9D4C), width: 1.5),
+        border: Border.all(color: const Color(0xFFFFB627), width: 1.5),
       ),
       child: Wrap(
         spacing: 8,
@@ -481,14 +514,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             height: 44,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [Color(0xFF2D9D4C), Color(0xFF1A7F37)],
+                colors: [Color(0xFFFFB627), Color(0xFFFF9505)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
               borderRadius: BorderRadius.circular(8),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF2D9D4C).withValues(alpha: 0.3),
+                  color: const Color(0xFFFFB627).withValues(alpha: 0.3),
                   blurRadius: 6,
                   offset: const Offset(0, 2),
                 ),
@@ -583,15 +616,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildBetHistoryItem(Bet bet) {
     final isWin = bet.status == BetStatus.won;
     final isLost = bet.status == BetStatus.lost;
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xFF1F2937),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: isWin 
-              ? const Color(0xFF2D9D4C)
+          color: isWin
+              ? const Color(0xFFFFB627)
               : isLost
                   ? const Color(0xFFDC2626)
                   : const Color(0xFF374151),
@@ -605,7 +638,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             height: 40,
             decoration: BoxDecoration(
               color: isWin
-                  ? const Color(0xFF2D9D4C).withValues(alpha: 0.2)
+                  ? const Color(0xFFFFB627).withValues(alpha: 0.2)
                   : isLost
                       ? const Color(0xFFDC2626).withValues(alpha: 0.2)
                       : const Color(0xFF374151),
@@ -614,7 +647,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: Icon(
               isWin ? Icons.check : isLost ? Icons.close : Icons.pending,
               color: isWin
-                  ? const Color(0xFF2D9D4C)
+                  ? const Color(0xFFFFB627)
                   : isLost
                       ? const Color(0xFFDC2626)
                       : const Color(0xFF9CA3AF),
@@ -622,7 +655,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
           const SizedBox(width: 12),
-          
+
           // Numbers
           Expanded(
             child: Column(
@@ -663,7 +696,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ],
             ),
           ),
-          
+
           // Amount and Result
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -680,7 +713,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 Text(
                   '+฿${_formatNumber(bet.actualWinAmount!)}',
                   style: const TextStyle(
-                    color: Color(0xFF2D9D4C),
+                    color: Color(0xFFFFB627),
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
