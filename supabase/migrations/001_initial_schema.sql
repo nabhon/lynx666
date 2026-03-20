@@ -266,21 +266,28 @@ WHERE f.status = 'pending'
   AND p.status = 'ACTIVE';
 
 -- ============ HELPER FUNCTIONS ============
+-- Note: All local variables use 'v_' prefix to avoid ambiguity with column names
 
 -- Function: Calculate next draw time based on config
 CREATE OR REPLACE FUNCTION get_next_draw_time(now_time TIMESTAMP WITH TIME ZONE)
 RETURNS TIMESTAMP WITH TIME ZONE AS $$
 DECLARE
   interval_hours INTEGER;
+  epoch_seconds NUMERIC;
+  next_interval NUMERIC;
 BEGIN
   SELECT (config_value->>'hours')::INTEGER INTO interval_hours
   FROM game_configs
   WHERE config_key = 'draw_interval';
 
-  -- Round up to next 2-hour interval
-  RETURN DATE_TRUNC('hour', now_time) +
-         (INTERVAL '1 hour' * interval_hours *
-          CEIL(EXTRACT(EPOCH FROM now_time) / (interval_hours * 3600)));
+  -- Calculate seconds since epoch
+  epoch_seconds := EXTRACT(EPOCH FROM now_time);
+  
+  -- Round up to next interval boundary
+  next_interval := CEIL(epoch_seconds / (interval_hours * 3600)) * (interval_hours * 3600);
+  
+  -- Convert back to timestamp
+  RETURN TIMESTAMP WITH TIME ZONE 'epoch' + (next_interval * INTERVAL '1 second');
 END;
 $$ LANGUAGE plpgsql;
 
@@ -414,9 +421,9 @@ DECLARE
   prize_amount NUMERIC;
   win_crit win_criteria;
   matched_numbers INTEGER[];
-  total_processed INTEGER := 0;
-  total_winners INTEGER := 0;
-  total_prize_pool NUMERIC(30, 2) := 0;
+  v_total_processed INTEGER := 0;
+  v_total_winners INTEGER := 0;
+  v_total_prize_pool NUMERIC(30, 2) := 0;
   result JSON;
 BEGIN
   -- Get draw info
@@ -451,7 +458,7 @@ BEGIN
     SELECT * FROM bets
     WHERE lottery_draw_id = draw_id AND status = 'PENDING'
   LOOP
-    total_processed := total_processed + 1;
+    v_total_processed := v_total_processed + 1;
 
     -- Determine win criteria
     win_crit := determine_win_criteria(
@@ -461,11 +468,11 @@ BEGIN
 
     IF win_crit IS NOT NULL THEN
       -- Winner!
-      total_winners := total_winners + 1;
+      v_total_winners := v_total_winners + 1;
 
       -- Calculate prize
       prize_amount := bet_record.bet_amount * get_prize_multiplier(win_crit);
-      total_prize_pool := total_prize_pool + prize_amount;
+      v_total_prize_pool := v_total_prize_pool + prize_amount;
 
       -- Find matched numbers for audit
       SELECT ARRAY(
@@ -510,24 +517,24 @@ BEGIN
   SET status = 'COMPLETED',
       completed_at = NOW(),
       draw_time = NOW(),
-      total_bets_count = total_processed,
-      total_prize_pool = total_prize_pool
+      total_bets_count = v_total_processed,
+      total_prize_pool = v_total_prize_pool
   WHERE id = draw_id;
 
   -- Create next scheduled draw
   DECLARE
     next_draw_time TIMESTAMP WITH TIME ZONE;
-    next_draw_id UUID;
+    v_next_draw_id UUID;
   BEGIN
     next_draw_time := get_next_draw_time(NOW());
 
     INSERT INTO lottery_draws (scheduled_time, status, previous_draw_id)
     VALUES (next_draw_time, 'PENDING', draw_id)
-    RETURNING id INTO next_draw_id;
+    RETURNING id INTO v_next_draw_id;
 
     -- Link current draw to next
     UPDATE lottery_draws
-    SET next_draw_id = next_draw_id
+    SET next_draw_id = v_next_draw_id
     WHERE id = draw_id;
   END;
 
@@ -535,9 +542,9 @@ BEGIN
   result := json_build_object(
     'draw_id', draw_id,
     'winning_numbers', draw_record.winning_numbers,
-    'total_bets', total_processed,
-    'total_winners', total_winners,
-    'total_prize_pool', total_prize_pool
+    'total_bets', v_total_processed,
+    'total_winners', v_total_winners,
+    'total_prize_pool', v_total_prize_pool
   );
 
   RETURN result;
@@ -550,16 +557,16 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION get_current_pending_draw_id()
 RETURNS UUID AS $$
 DECLARE
-  draw_id UUID;
+  v_draw_id UUID;
 BEGIN
-  SELECT id INTO draw_id
+  SELECT id INTO v_draw_id
   FROM lottery_draws
   WHERE status = 'PENDING'
     AND scheduled_time <= NOW()
   ORDER BY scheduled_time ASC
   LIMIT 1;
 
-  RETURN draw_id;
+  RETURN v_draw_id;
 END;
 $$ LANGUAGE plpgsql;
 
