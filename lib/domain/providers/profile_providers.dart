@@ -97,7 +97,11 @@ class OnboardingStatus extends _$OnboardingStatus {
 }
 
 /// Profile balance provider (derived from UserProfile)
-final profileBalanceProvider = Provider<double>((ref) {
-  final profile = ref.watch(userProfileProvider);
-  return profile.value?.balance ?? 0.0;
-});
+@riverpod
+class ProfileBalance extends _$ProfileBalance {
+  @override
+  double build() {
+    final profile = ref.watch(userProfileProvider);
+    return profile.value?.balance ?? 0.0;
+  }
+}

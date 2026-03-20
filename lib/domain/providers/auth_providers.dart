@@ -75,11 +75,19 @@ class AuthState extends _$AuthState {
 }
 
 /// Provider to check if user is authenticated (sync)
-final isAuthenticatedProvider = Provider<bool>((ref) {
-  return ref.watch(authStateProvider).value != null;
-});
+@riverpod
+class IsAuthenticated extends _$IsAuthenticated {
+  @override
+  bool build() {
+    return ref.watch(authStateProvider).value != null;
+  }
+}
 
 /// Provider to get current user ID
-final currentUserIdProvider = Provider<String?>((ref) {
-  return ref.watch(authStateProvider).value?.id;
-});
+@riverpod
+class CurrentUserId extends _$CurrentUserId {
+  @override
+  String? build() {
+    return ref.watch(authStateProvider).value?.id;
+  }
+}
