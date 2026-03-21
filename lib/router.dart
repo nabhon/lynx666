@@ -112,7 +112,7 @@ final router = GoRouter(
       path: '/home',
       name: 'home',
       builder: (context, state) => const HomeScreen(),
-       routes: [
+      routes: [
         GoRoute(
           path: 'leaderboard',
           name: 'leaderboard',
