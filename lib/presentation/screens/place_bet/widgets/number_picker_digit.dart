@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/app_theme.dart';
 
 class NumberPickerDigit extends StatelessWidget {
   final int value;
@@ -29,15 +28,18 @@ class NumberPickerDigit extends StatelessWidget {
           icon: const Icon(Icons.arrow_drop_up, size: 32),
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(minHeight: 36, minWidth: 36),
-          color: AppColors.textSecondary,
+          color: const Color(0xFFFFB627),
         ),
         Container(
-          width: 48,
+          width: 44,
           height: 56,
           decoration: BoxDecoration(
-            color: AppColors.surface,
+            gradient: const LinearGradient(
+              colors: [Color(0xFFFFB627), Color(0xFFFF9505)],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: AppColors.primary, width: 2),
           ),
           alignment: Alignment.center,
           child: Text(
@@ -45,7 +47,8 @@ class NumberPickerDigit extends StatelessWidget {
             style: const TextStyle(
               fontSize: 28,
               fontWeight: FontWeight.bold,
-              color: AppColors.text,
+              color: Colors.white,
+              fontFamily: 'monospace',
             ),
           ),
         ),
@@ -54,7 +57,7 @@ class NumberPickerDigit extends StatelessWidget {
           icon: const Icon(Icons.arrow_drop_down, size: 32),
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(minHeight: 36, minWidth: 36),
-          color: AppColors.textSecondary,
+          color: const Color(0xFFFFB627),
         ),
       ],
     );

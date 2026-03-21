@@ -9,7 +9,7 @@ import 'presentation/screens/place_bet/place_bet_screen.dart';
 import 'presentation/screens/bet_history/bet_history_screen.dart';
 
 final router = GoRouter(
-  initialLocation: '/place-bet',
+  initialLocation: '/home',
   routes: [
     GoRoute(
       path: '/loading',
