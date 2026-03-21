@@ -16,18 +16,23 @@ class LeaderboardScreen extends ConsumerWidget {
     final currentUserAsync = ref.watch(authStateProvider);
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
-        title: const Text('Leaderboard'),
+        title: const Text(
+          'ลีดเดอร์บอร์ด',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.go('/'),
+          onPressed: () => context.goNamed('home'),
         ),
       ),
       body: leaderboardAsync.when(
         data: (allEntries) {
           if (allEntries.isEmpty) {
-            return const Center(child: Text('No leaderboard data'));
+            return const Center(child: Text('ไม่มีข้อมูลผู้เล่น'));
           }
 
           final topThree = allEntries.take(3).toList();
@@ -42,7 +47,10 @@ class LeaderboardScreen extends ConsumerWidget {
           final isInTop10 = currentUserEntry.rank <= 10;
 
           return RefreshIndicator(
-            onRefresh: () => ref.refresh(leaderboardProvider().future),
+            onRefresh: () async {
+              await ref.refresh(leaderboardProvider().future);
+              await ref.refresh(authStateProvider.future);
+            },
             child: ListView(
               children: [
                 // Top 3 Podium

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../domain/entities/leaderboard_entry.dart';
+import '../../../../data/datasources/supabase_client.dart';
 
 class TopThreePodium extends StatelessWidget {
   final List<LeaderboardEntry> topThree;
@@ -11,6 +12,11 @@ class TopThreePodium extends StatelessWidget {
     required this.topThree,
     this.currentUserId,
   });
+
+  String? _getAvatarUrl(String? avatarKey) {
+    if (avatarKey == null || avatarKey.isEmpty) return null;
+    return SupabaseInit.client.storage.from('profile_avatar').getPublicUrl(avatarKey);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,17 +78,7 @@ class TopThreePodium extends StatelessWidget {
             child: CircleAvatar(
               radius: rank == 1 ? 40 : 32,
               backgroundColor: AppColors.primary,
-              child: entry.avatarKey != null
-                  ? ClipOval(
-                      child: Image.network(
-                        entry.avatarKey!,
-                        width: rank == 1 ? 80 : 64,
-                        height: rank == 1 ? 80 : 64,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _buildDefaultAvatar(entry, rank),
-                      ),
-                    )
-                  : _buildDefaultAvatar(entry, rank),
+              child: _buildAvatar(entry, rank),
             ),
           ),
           const SizedBox(height: 8),
@@ -145,6 +141,28 @@ class TopThreePodium extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildAvatar(LeaderboardEntry entry, int rank) {
+    final avatarUrl = _getAvatarUrl(entry.avatarKey);
+    final size = rank == 1 ? 80.0 : 64.0;
+    
+    if (avatarUrl != null) {
+      return ClipOval(
+        child: Image.network(
+          avatarUrl,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _buildDefaultAvatar(entry, rank),
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return _buildDefaultAvatar(entry, rank);
+          },
+        ),
+      );
+    }
+    return _buildDefaultAvatar(entry, rank);
   }
 
   Widget _buildDefaultAvatar(LeaderboardEntry entry, int rank) {
