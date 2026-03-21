@@ -42,36 +42,33 @@ textSecondary: Color(0xFF757575) // Secondary text
 dependencies:
   flutter:
     sdk: flutter
-  
+
   # State Management
-  flutter_riverpod: ^2.4.9
-  riverpod_annotation: ^2.3.3
-  
+  flutter_riverpod: ^3.1.0
+  riverpod_annotation: ^4.0.0
+
   # Routing
-  go_router: ^13.1.0
-  
+  go_router: ^17.1.0
+
   # Backend & Auth
   supabase_flutter: ^2.3.0
-  
+
   # UI & Fonts
-  google_fonts: ^6.1.0
-  flutter_svg: ^2.0.9
-  
+  google_fonts: ^8.0.2
+
   # Utilities
-  intl: ^0.19.0              # Date/time formatting
-  cached_network_image: ^3.3.1  # Image caching
-  image_picker: ^1.0.7         # Avatar upload
-  
+  intl: ^0.20.2
+
   # Environment
-  flutter_dotenv: ^5.1.0
+  flutter_dotenv: ^6.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  riverpod_generator: ^2.3.9
-  build_runner: ^2.4.8
-  custom_lint: ^0.5.8
-  riverpod_lint: ^2.3.7
+  riverpod_generator: ^4.0.0+1
+  build_runner: ^2.13.1
+  custom_lint: ^0.8.1
+  riverpod_lint: ^3.1.0
 ```
 
 ---

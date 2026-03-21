@@ -50,8 +50,6 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await _supabase.auth.signInWithPassword(email: email, password: password);
 
-      _showSnackBar("เข้าสู่ระบบสำเร็จ");
-
       // เข้าแอป
       context.go('/home');
       
@@ -65,9 +63,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
   }
 
   @override
@@ -195,6 +199,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               "เข้าสู่ระบบ",
                               style: TextStyle(
                                 fontSize: 16,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.3,
                               ),
