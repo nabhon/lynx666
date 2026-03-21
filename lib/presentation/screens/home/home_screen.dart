@@ -69,35 +69,46 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFFAFAFA),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Header Section
-                _buildHeader(profile),
-                
-                const SizedBox(height: 24),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await ref.refresh(latestLotteryDrawProvider.future);
+            await ref.refresh(nextLotteryDrawProvider.future);
+            await ref.refresh(userProfileProvider.future);
+            await ref.refresh(userBetHistoryProvider().future);
+            await ref.refresh(userPendingBetsProvider.future);
+            ref.invalidate(profileBalanceProvider);
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header Section
+                  _buildHeader(profile),
 
-                // Current Draw Section (Latest Completed Draw)
-                _buildCurrentDraw(latestDraw),
+                  const SizedBox(height: 24),
 
-                const SizedBox(height: 16),
-                
-                // Countdown Timer Section
-                _buildCountdownTimer(countdown),
-                
-                const SizedBox(height: 32),
-                
-                // Your Number Section
-                _buildYourNumberSection(pendingBets),
-                
-                const SizedBox(height: 32),
-                
-                // Bet History Section
-                _buildBetHistorySection(betHistory),
-              ],
+                  // Current Draw Section (Latest Completed Draw)
+                  _buildCurrentDraw(latestDraw),
+
+                  const SizedBox(height: 16),
+
+                  // Countdown Timer Section
+                  _buildCountdownTimer(countdown),
+
+                  const SizedBox(height: 32),
+
+                  // Your Number Section
+                  _buildYourNumberSection(pendingBets),
+
+                  const SizedBox(height: 32),
+
+                  // Bet History Section
+                  _buildBetHistorySection(betHistory),
+                ],
+              ),
             ),
           ),
         ),
@@ -113,22 +124,80 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         children: [
           // Balance (Top Left)
           _buildBalanceCard(data?.balance ?? 0.0),
-          // Profile Image (Top Right)
-          _buildProfileImage(data),
+          // Profile Section (Top Right) - Leaderboard + Profile Image
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Leaderboard Button
+              GestureDetector(
+                onTap: () => context.goNamed('leaderboard'),
+                child: Container(
+                  width: 40,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFFFB627), Color(0xFFFF9505)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(
+                    Icons.emoji_events,
+                    color: Colors.white,
+                    size: 28,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              // Profile Image
+              _buildProfileImage(data),
+            ],
+          ),
         ],
       ),
       loading: () => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildBalanceCard(0.0),
-          _buildProfileImage(null),
+          const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 40,
+                height: 56,
+                child: Icon(Icons.emoji_events, color: Colors.white),
+              ),
+              SizedBox(width: 8),
+              SizedBox(
+                width: 50,
+                height: 50,
+                child: Icon(Icons.person, color: Color(0xFFFFB627)),
+              ),
+            ],
+          ),
         ],
       ),
       error: (_, __) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildBalanceCard(0.0),
-          _buildProfileImage(null),
+          const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: 40,
+                height: 56,
+                child: Icon(Icons.emoji_events, color: Colors.white),
+              ),
+              SizedBox(width: 8),
+              SizedBox(
+                width: 50,
+                height: 50,
+                child: Icon(Icons.person, color: Color(0xFFFFB627)),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -516,29 +585,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         runSpacing: 8,
         alignment: WrapAlignment.center,
         children: allNumbers.map((number) {
-          return Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFFFFB627), Color(0xFFFF9505)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-              borderRadius: BorderRadius.circular(8),
-
-            ),
-            child: Center(
-              child: Text(
-                number.toString().padLeft(2, '0'),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          );
+          return _buildDigitBox(number.toString());
         }).toList(),
       ),
     );
@@ -697,7 +744,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          number.toString().padLeft(2, '0'),
+                          number.toString(),
                           style: const TextStyle(
                             color: Color(0xFF1A1A1A),
                             fontSize: 12,
