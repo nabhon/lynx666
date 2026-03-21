@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:go_router/go_router.dart';
 
-class RegisterScreen extends StatefulWidget {
+import '../../../domain/providers/auth_providers.dart';
+
+class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
   final _supabase = Supabase.instance.client;
 
-  bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
@@ -48,15 +50,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
       return;
     }
 
-    setState(() => _isLoading = true);
-
     try {
-      final response = await _supabase.auth.signUp(email: email, password: password);
+      await ref.read(authStateProvider.notifier).signUpWithEmailPassword(
+        email: email,
+        password: password,
+      );
 
-      if (response.user != null) {
-        // Create profile in database
+      // ถ้าสำเร็จ insert profile
+      final user = _supabase.auth.currentUser;
+      if (user != null) {
         await _supabase.from('profiles').insert({
-          'id': response.user!.id,
+          'id': user.id,
           'email': email,
           'is_onboarding_complete': false,
         });
@@ -69,13 +73,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _showSnackBar("สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
       }
 
-    } on AuthException catch (e) {
-      _showSnackBar("อีเมลนี้ถูกใช้งานแล้วหรือข้อมูลไม่ถูกต้อง"); 
     } catch (e) {
-      _showSnackBar("เกิดข้อผิดพลาด");
+      _showSnackBar("อีเมลนี้ถูกใช้งานแล้วหรือข้อมูลไม่ถูกต้อง");
     }
-
-    setState(() => _isLoading = false);
   }
 
   void _showSnackBar(String message) {
@@ -92,6 +92,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authStateProvider);
+    final isLoading = authState.isLoading;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -251,14 +254,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     width: double.infinity,
                     height: 48,
                     child: ElevatedButton(
-                      onPressed: _isLoading ? null : _register,
+                      onPressed: isLoading ? null : _register,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFFF8400),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
                         ),
                       ),
-                      child: _isLoading
+                      child: isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : const Text(
                               "สมัครสมาชิก",
