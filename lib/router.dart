@@ -9,7 +9,7 @@ import 'presentation/screens/place_bet/place_bet_screen.dart';
 import 'presentation/screens/bet_history/bet_history_screen.dart';
 
 final router = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/loading',
   routes: [
     GoRoute(
       path: '/loading',
@@ -30,21 +30,23 @@ final router = GoRouter(
       path: '/home',
       name: 'home',
       builder: (context, state) => const HomeScreen(),
-    ),
-    GoRoute(
-      path: '/leaderboard',
-      name: 'leaderboard',
-      builder: (context, state) => const LeaderboardScreen(),
-    ),
-    GoRoute(
-      path: '/place-bet',
-      name: 'place_bet',
-      builder: (context, state) => const PlaceBetScreen(),
-    ),
-    GoRoute(
-      path: '/bet-history',
-      name: 'bet_history',
-      builder: (context, state) => const BetHistoryScreen(),
+       routes: [
+        GoRoute(
+          path: 'leaderboard',
+          name: 'leaderboard',
+          builder: (context, state) => const LeaderboardScreen(),
+        ),
+        GoRoute(
+          path: 'place-bet',
+          name: 'place_bet',
+          builder: (context, state) => const PlaceBetScreen(),
+        ),
+        GoRoute(
+          path: 'bet-history',
+          name: 'bet_history',
+          builder: (context, state) => const BetHistoryScreen(),
+        ),
+      ],
     ),
   ],
   redirect: (context, state) {
