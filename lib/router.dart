@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -97,12 +98,18 @@ final router = GoRouter(
     GoRoute(
       path: '/loading',
       name: 'loading',
-      builder: (context, state) => const LoadingScreen(),
+      pageBuilder: (context, state) => CupertinoPage(
+        key: state.pageKey,
+        child: const LoadingScreen(),
+      ),
     ),
     GoRoute(
       path: '/login',
       name: 'login',
-      builder: (context, state) => const LoginScreen(),
+      pageBuilder: (context, state) => CupertinoPage(
+        key: state.pageKey,
+        child: const LoginScreen(),
+      ),
     ),
     GoRoute(
       path: '/register',
@@ -112,29 +119,44 @@ final router = GoRouter(
     GoRoute(
       path: '/onboarding',
       name: 'onboarding',
-      builder: (context, state) => const UsernameSetupScreen(),
+      pageBuilder: (context, state) => CupertinoPage(
+        key: state.pageKey,
+        child: const UsernameSetupScreen(),
+      ),
     ),
     GoRoute(
       path: '/home',
       name: 'home',
-      builder: (context, state) => const HomeScreen(),
+      pageBuilder: (context, state) => CupertinoPage(
+        key: state.pageKey,
+        child: const HomeScreen(),
+      ),
       routes: [
         GoRoute(
-          path: '/leaderboard',
-          name: 'leaderboard',
-          builder: (context, state) => const LeaderboardScreen(),
+        path: '/leaderboard',
+        name: 'leaderboard',
+        pageBuilder: (context, state) => CupertinoPage(
+          key: state.pageKey,
+          child: const LeaderboardScreen(),
+        ),
         ),
         GoRoute(
           path: '/place-bet',
           name: 'place_bet',
-          builder: (context, state) => const PlaceBetScreen(),
+          pageBuilder: (context, state) => CupertinoPage(
+            key: state.pageKey,
+            child: const PlaceBetScreen(),
+          ),
         ),
         GoRoute(
           path: '/bet-history',
           name: 'bet_history',
-          builder: (context, state) => const BetHistoryScreen(),
+          pageBuilder: (context, state) => CupertinoPage(
+            key: state.pageKey,
+            child: const BetHistoryScreen(),
+          ),
         ),
-      ],
+      ]
     ),
   ],
   redirect: (context, state) {
