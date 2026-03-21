@@ -32,15 +32,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
-  /// Check if countdown just reached zero and refresh draw data
+  /// Check if countdown just reached zero and refresh all related data
   void _checkCountdownReachedZero() {
     final countdown = ref.read(lotteryCountdownProvider);
     
     // Check if countdown just reached zero (was positive, now is zero)
     if (countdown == Duration.zero && (_previousCountdown ?? Duration.zero) > Duration.zero) {
-      // Refresh the draw providers to get new data
+      // Refresh lottery draw providers
       ref.invalidate(latestLotteryDrawProvider);
       ref.invalidate(nextLotteryDrawProvider);
+      
+      // Refresh user data providers (balance, bet history, pending bets)
+      ref.invalidate(userProfileProvider);
+      ref.invalidate(userBetHistoryProvider);
+      ref.invalidate(userPendingBetsProvider);
+      ref.invalidate(profileBalanceProvider);
     }
     
     _previousCountdown = countdown;
