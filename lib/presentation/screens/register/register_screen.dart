@@ -73,32 +73,52 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         password: password,
       );
 
-      // ถ้าสำเร็จ เปลี่ยนหน้าไป onboarding ทันที
-      final user = _supabase.auth.currentUser;
+      User? user;
+      for (var i = 0; i < 30; i++) {
+        user = _supabase.auth.currentUser;
+        if (user != null) break;
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
       if (user != null) {
-        _showSnackBar("สมัครสมาชิกสำเร็จ กรุณาตั้งค่าโปรไฟล์");
-        if (mounted) {
-          context.go('/onboarding');
+        final profileExists = await _supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', user.id)
+            .maybeSingle();
+
+        if (profileExists == null) {
+          await _supabase.from('profiles').insert({
+            'id': user.id,
+            'email': email,
+            'is_onboarding_complete': false,
+          });
         }
 
-        // Upsert profile in background
-        _supabase.from('profiles').upsert({
-          'id': user.id,
-          'email': email,
-          'is_onboarding_complete': false,
-        }).then((_) {
-          // Profile upserted successfully
-        }).catchError((e) {
-          // Handle upsert error if needed
-          print('Profile upsert error: $e');
-        });
-      } else {
-        _showSnackBar("สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+        final checkProfile = await _supabase
+            .from('profiles')
+            .select('id')
+            .eq('id', user.id)
+            .maybeSingle();
+
+        if (checkProfile != null) {
+          //_showSnackBar("สมัครสมาชิกสำเร็จ กรุณาตั้งค่าโปรไฟล์");
+          if (mounted) context.go('/onboarding');
+          return;
+        }
       }
+
+      _showSnackBar("สมัครสมาชิกสำเร็จแล้ว แต่เกิดปัญหากับข้อมูลบัญชี กรุณาติดต่อผู้ดูแลระบบ");
+      // stay on register page
 
     } catch (e) {
       print('Registration error: $e');
-      _showSnackBar("อีเมลนี้ถูกใช้งานแล้วหรือข้อมูลไม่ถูกต้อง");
+      final errorText = e.toString().toLowerCase();
+      if (errorText.contains('duplicate') || errorText.contains('already exists')) {
+        _showSnackBar("อีเมลนี้ถูกใช้งานแล้ว");
+      } else {
+        _showSnackBar("เกิดข้อผิดพลาด ขอให้ลองใหม่อีกครั้ง");
+      }
     }
   }
 
