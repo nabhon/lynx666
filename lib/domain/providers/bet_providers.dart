@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/entities.dart';
 import 'repository_providers.dart';
@@ -123,6 +125,9 @@ class PlaceBet extends _$PlaceBet {
 
     state = const AsyncValue.loading();
 
+    dev.log('[PlaceBet] calling repository.placeBet...');
+    dev.log('[PlaceBet] userId=$userId, drawId=$lotteryDrawId, amount=$betAmount');
+
     final result = await AsyncValue.guard(() async {
       return await repository.placeBet(
         userId: userId,
@@ -132,8 +137,17 @@ class PlaceBet extends _$PlaceBet {
       );
     });
 
+    dev.log('[PlaceBet] result hasValue=${result.hasValue}, hasError=${result.hasError}');
+    if (result.hasError) {
+      dev.log('[PlaceBet] ERROR: ${result.error}');
+    }
+    dev.log('[PlaceBet] isDisposed=$isDisposed');
+
     // Provider was disposed during await — don't touch ref/state
-    if (isDisposed) return result.value;
+    if (isDisposed) {
+      dev.log('[PlaceBet] SKIPPED state/invalidate — provider disposed');
+      return result.value;
+    }
 
     state = AsyncValue.data(result.value);
 
@@ -141,6 +155,7 @@ class PlaceBet extends _$PlaceBet {
     ref.invalidate(userBetHistoryProvider);
     ref.invalidate(userPendingBetsProvider);
     ref.invalidate(profileBalanceProvider);
+    dev.log('[PlaceBet] DONE — invalidated related providers');
 
     return result.value;
   }
