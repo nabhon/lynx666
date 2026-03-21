@@ -94,6 +94,8 @@ class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
           );
 
       if (mounted) {
+        // Refresh profile/balance ก่อน navigate เพื่อให้ home เห็น coin ที่หักแล้ว
+        ref.invalidate(userProfileProvider);
         _showSnackBar('วางเดิมพันสำเร็จ!', isError: false);
         context.go('/home');
       }
