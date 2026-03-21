@@ -20,6 +20,7 @@ class _BetHistoryScreenState extends ConsumerState<BetHistoryScreen> {
     
     return betsAsync.when(
       data: (bets) => Scaffold(
+        backgroundColor: const Color(0xFFFAFAFA),
         appBar: AppBar(
           centerTitle: true,
           title: const Row(
@@ -43,9 +44,11 @@ class _BetHistoryScreenState extends ConsumerState<BetHistoryScreen> {
             : _buildListView(bets),
       ),
       loading: () => const Scaffold(
+        backgroundColor: Color(0xFFFAFAFA),
         body: Center(child: CircularProgressIndicator()),
       ),
       error: (error, stack) => Scaffold(
+        backgroundColor: const Color(0xFFFAFAFA),
         body: Center(child: Text('Error: $error')),
       ),
     );
