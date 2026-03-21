@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/entities.dart';
+import '../../../domain/providers/providers.dart';
 import 'widgets/bet_history_tile.dart';
 
 class BetHistoryScreen extends ConsumerStatefulWidget {
@@ -13,36 +14,40 @@ class BetHistoryScreen extends ConsumerStatefulWidget {
 class _BetHistoryScreenState extends ConsumerState<BetHistoryScreen> {
   BetStatus? _filter;
 
-  List<Bet> _getFilteredBets() {
-    return [];
-  }
-
   @override
   Widget build(BuildContext context) {
-    final bets = _getFilteredBets();
-
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.history_rounded, size: 24),
-            SizedBox(width: 8),
-            Text('ประวัติการแทง', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
-          ],
+    final betsAsync = ref.watch(userBetHistoryProvider(filter: _filter));
+    
+    return betsAsync.when(
+      data: (bets) => Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.history_rounded, size: 24),
+              SizedBox(width: 8),
+              Text('ประวัติการแทง', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
+            ],
+          ),
+          elevation: 0,
+          backgroundColor: const Color(0xFFFFB627),
+          foregroundColor: Colors.white,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(52),
+            child: _buildFilters(),
+          ),
         ),
-        elevation: 0,
-        backgroundColor: const Color(0xFFFFB627),
-        foregroundColor: Colors.white,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(52),
-          child: _buildFilters(),
-        ),
+        body: bets.isEmpty
+            ? const Center(child: Text('ยังไม่มีประวัติการแทง'))
+            : _buildListView(bets),
       ),
-      body: bets.isEmpty
-          ? const Center(child: Text('ยังไม่มีประวัติการแทง'))
-          : _buildListView(bets),
+      loading: () => const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, stack) => Scaffold(
+        body: Center(child: Text('Error: $error')),
+      ),
     );
   }
 
