@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(find /d/Project_videcode/Project_Lynx666/lynx666 -maxdepth 2 -type f -name *.yaml -o -name *.yml -o -name Makefile -o -name *.md -o -name .cursorrules -o -name .cursor -o -name build.gradle -o -name package.json)",
-      "Bash(wc -l /d/Project_videcode/Project_Lynx666/lynx666/lib/**/*.dart)",
-      "Bash(flutter analyze:*)"
-    ]
-  }
-}
