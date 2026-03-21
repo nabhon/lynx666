@@ -4,7 +4,6 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
 
 import '../../../../domain/providers/profile_providers.dart';
-import '../../../../domain/providers/auth_providers.dart';
 
 class UsernameSetupScreen extends ConsumerStatefulWidget {
   const UsernameSetupScreen({super.key});
@@ -79,22 +78,31 @@ class _UsernameSetupScreenState extends ConsumerState<UsernameSetupScreen> {
 
       // Upload avatar if user selected one
       if (_imageBytes != null) {
-        avatarKey = await ref
-            .read(userProfileProvider.notifier)
-            .uploadAvatar(_imageBytes!);
+        try {
+          final notifier = ref.read(userProfileProvider.notifier);
+          avatarKey = await notifier.uploadAvatar(_imageBytes!);
+        } catch (uploadError) {
+          print('Upload error: $uploadError');
+          // Continue with default avatar if upload fails
+          avatarKey = 'default_avatar';
+        }
       }
 
-      await ref
-          .read(userProfileProvider.notifier)
-          .completeOnboarding(username: username, avatarKey: avatarKey);
+      // Check mounted after async gap before using ref
+      if (!mounted) return;
 
-      if (mounted) {
-        Navigator.of(
-          context,
-        ).pushNamedAndRemoveUntil('/home', (route) => false);
-      }
+      final notifier = ref.read(userProfileProvider.notifier);
+      await notifier.completeOnboarding(username: username, avatarKey: avatarKey);
+
+      // Check mounted after async gap before navigation
+      if (!mounted) return;
+
+      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
     } catch (e) {
-      _showError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+      print('Onboarding error: $e');
+      if (mounted) {
+        _showError('เกิดข้อผิดพลาด: ${e.toString()}');
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
