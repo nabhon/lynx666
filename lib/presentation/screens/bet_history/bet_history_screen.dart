@@ -17,39 +17,33 @@ class _BetHistoryScreenState extends ConsumerState<BetHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     final betsAsync = ref.watch(userBetHistoryProvider(filter: _filter));
-    
-    return betsAsync.when(
-      data: (bets) => Scaffold(
-        backgroundColor: const Color(0xFFFAFAFA),
-        appBar: AppBar(
-          centerTitle: true,
-          title: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.history_rounded, size: 24),
-              SizedBox(width: 8),
-              Text('ประวัติการแทง', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
-            ],
-          ),
-          elevation: 0,
-          backgroundColor: const Color(0xFFFFB627),
-          foregroundColor: Colors.white,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(52),
-            child: _buildFilters(),
-          ),
+
+    return Scaffold(
+      backgroundColor: const Color(0xFFFAFAFA),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.history_rounded, size: 24),
+            SizedBox(width: 8),
+            Text('ประวัติการแทง', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
+          ],
         ),
-        body: bets.isEmpty
+        elevation: 0,
+        backgroundColor: const Color(0xFFFFB627),
+        foregroundColor: Colors.white,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(52),
+          child: _buildFilters(),
+        ),
+      ),
+      body: betsAsync.when(
+        data: (bets) => bets.isEmpty
             ? const Center(child: Text('ยังไม่มีประวัติการแทง'))
             : _buildListView(bets),
-      ),
-      loading: () => const Scaffold(
-        backgroundColor: Color(0xFFFAFAFA),
-        body: Center(child: CircularProgressIndicator()),
-      ),
-      error: (error, stack) => Scaffold(
-        backgroundColor: const Color(0xFFFAFAFA),
-        body: Center(child: Text('Error: $error')),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(child: Text('Error: $error')),
       ),
     );
   }
