@@ -50,30 +50,54 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       return;
     }
 
+    // Check if email already exists
+    try {
+      final existingProfile = await _supabase
+          .from('profiles')
+          .select('email')
+          .eq('email', email)
+          .maybeSingle();
+      
+      if (existingProfile != null) {
+        _showSnackBar("อีเมลนี้ถูกใช้งานแล้ว");
+        return;
+      }
+    } catch (e) {
+      // If error checking, continue with registration
+      // This prevents blocking registration due to temporary issues
+    }
+
     try {
       await ref.read(authStateProvider.notifier).signUpWithEmailPassword(
         email: email,
         password: password,
       );
 
-      // ถ้าสำเร็จ insert profile
+      // ถ้าสำเร็จ เปลี่ยนหน้าไป onboarding ทันที
       final user = _supabase.auth.currentUser;
       if (user != null) {
-        await _supabase.from('profiles').insert({
+        _showSnackBar("สมัครสมาชิกสำเร็จ กรุณาตั้งค่าโปรไฟล์");
+        if (mounted) {
+          context.go('/onboarding');
+        }
+
+        // Upsert profile in background
+        _supabase.from('profiles').upsert({
           'id': user.id,
           'email': email,
           'is_onboarding_complete': false,
+        }).then((_) {
+          // Profile upserted successfully
+        }).catchError((e) {
+          // Handle upsert error if needed
+          print('Profile upsert error: $e');
         });
-
-        _showSnackBar("สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบ");
-        if (mounted) {
-          context.go('/login');
-        }
       } else {
         _showSnackBar("สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
       }
 
     } catch (e) {
+      print('Registration error: $e');
       _showSnackBar("อีเมลนี้ถูกใช้งานแล้วหรือข้อมูลไม่ถูกต้อง");
     }
   }
