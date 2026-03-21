@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:go_router/go_router.dart'; // ใช้ redirect
+import 'package:go_router/go_router.dart';
+
+import '../../../router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
     /// ถ้า login อยู่แล้ว เข้าแอปเลย
     final user = _supabase.auth.currentUser;
     if (user != null) {
-      Future.microtask(() => context.go('/home'));
+      Future.microtask(() => _navigateAfterLogin());
     }
   }
 
@@ -34,6 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _navigateAfterLogin() async {
+    final route = await getRouteAfterLogin();
+    if (mounted) {
+      context.go(route);
+    }
   }
 
   Future<void> _login() async {
@@ -50,9 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await _supabase.auth.signInWithPassword(email: email, password: password);
 
-      // เข้าแอป
-      context.go('/home');
-      
+      // Navigate based on auth and onboarding status
+      await _navigateAfterLogin();
+
     } on AuthException catch (e) {
       _showSnackBar("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
     } catch (e) {

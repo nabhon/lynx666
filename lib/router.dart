@@ -18,10 +18,45 @@ String checkAuthAndRedirect() {
   final session = Supabase.instance.client.auth.currentSession;
   final isAuthenticated = session != null;
   
-  if (isAuthenticated) {
-    return '/home';
-  } else {
+  if (!isAuthenticated) {
     return '/login';
+  }
+  
+  // User is authenticated, check onboarding status
+  return '/home';
+}
+
+/// Middleware to check auth and onboarding status after login.
+/// Returns the appropriate route based on user's onboarding status.
+/// 
+/// Usage: Call this after successful login to determine where to navigate.
+Future<String> getRouteAfterLogin() async {
+  final session = Supabase.instance.client.auth.currentSession;
+  final isAuthenticated = session != null;
+  
+  if (!isAuthenticated) {
+    return '/login';
+  }
+  
+  // User is authenticated, fetch profile to check onboarding status
+  final userId = session.user.id;
+  try {
+    final response = await Supabase.instance.client
+        .from('profiles')
+        .select('is_onboarding_complete')
+        .eq('id', userId)
+        .maybeSingle();
+    
+    final isOnboardingComplete = response?['is_onboarding_complete'] as bool? ?? false;
+    
+    if (!isOnboardingComplete) {
+      return '/onboarding';
+    }
+    
+    return '/home';
+  } catch (e) {
+    // If there's an error fetching profile, default to home
+    return '/home';
   }
 }
 
