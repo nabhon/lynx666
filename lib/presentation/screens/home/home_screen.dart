@@ -447,7 +447,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => context.go('/place-bet'),
+            onPressed: () => context.goNamed('place_bet'),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFFFB627),
               foregroundColor: Colors.white,
@@ -554,13 +554,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'ประวัติการแทง',
-          style: TextStyle(
-            color: Color(0xFF1A1A1A),
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'ประวัติการแทง',
+              style: TextStyle(
+                color: Color(0xFF1A1A1A),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            TextButton(
+              onPressed: () => context.goNamed('bet_history'),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: const Size(0, 0),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: const Text(
+                'ดูทั้งหมด',
+                style: TextStyle(
+                  color: Color(0xFFFFB627),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 12),
         betHistory.when(

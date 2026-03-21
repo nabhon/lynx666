@@ -29,7 +29,7 @@ class _BetHistoryScreenState extends ConsumerState<BetHistoryScreen> {
           children: [
             Icon(Icons.history_rounded, size: 24),
             SizedBox(width: 8),
-            Text('ประวัติการแทง', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            Text('ประวัติการแทง', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
           ],
         ),
         elevation: 0,

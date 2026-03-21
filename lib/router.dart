@@ -120,17 +120,17 @@ final router = GoRouter(
       builder: (context, state) => const HomeScreen(),
       routes: [
         GoRoute(
-          path: 'leaderboard',
+          path: '/leaderboard',
           name: 'leaderboard',
           builder: (context, state) => const LeaderboardScreen(),
         ),
         GoRoute(
-          path: 'place-bet',
+          path: '/place-bet',
           name: 'place_bet',
           builder: (context, state) => const PlaceBetScreen(),
         ),
         GoRoute(
-          path: 'bet-history',
+          path: '/bet-history',
           name: 'bet_history',
           builder: (context, state) => const BetHistoryScreen(),
         ),
