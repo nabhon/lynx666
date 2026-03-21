@@ -567,7 +567,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -577,16 +577,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFFFB627), width: 1.5),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: const Color(0xFFFFB627),
+          width: 1.5,
+        ),
       ),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        alignment: WrapAlignment.center,
-        children: allNumbers.map((number) {
-          return _buildDigitBox(number.toString());
-        }).toList(),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: allNumbers
+                  .take(3)
+                  .map((number) => _buildDigitBox(number.toString()))
+                  .toList(),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: allNumbers
+                  .skip(3)
+                  .take(3)
+                  .map((number) => _buildDigitBox(number.toString()))
+                  .toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
