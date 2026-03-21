@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../data/datasources/supabase_client.dart';
 import '../../domain/entities/entities.dart';
@@ -76,6 +78,26 @@ class UserProfile extends _$UserProfile {
 
   /// Check if onboarding is complete
   bool get isOnboardingComplete => state.value?.isOnboardingComplete ?? false;
+
+  /// Upload avatar image to Supabase storage
+  Future<String> uploadAvatar(Uint8List imageBytes) async {
+    final userId = ref.read(currentUserIdProvider);
+    if (userId == null) throw Exception('Not authenticated');
+
+    // Generate unique filename
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final avatarKey = 'avatars/$userId/$timestamp.png';
+
+    // Upload to Supabase storage
+    final bucket = SupabaseInit.client.storage.from('avatars');
+    await bucket.uploadBinary(
+      avatarKey,
+      imageBytes,
+      fileOptions: const FileOptions(contentType: 'image/png'),
+    );
+
+    return avatarKey;
+  }
 }
 
 /// Onboarding status provider

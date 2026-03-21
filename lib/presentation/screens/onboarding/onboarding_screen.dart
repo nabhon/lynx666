@@ -75,9 +75,18 @@ class _UsernameSetupScreenState extends ConsumerState<UsernameSetupScreen> {
     setState(() => _isLoading = true);
 
     try {
+      String avatarKey = 'default_avatar';
+
+      // Upload avatar if user selected one
+      if (_imageBytes != null) {
+        avatarKey = await ref
+            .read(userProfileProvider.notifier)
+            .uploadAvatar(_imageBytes!);
+      }
+
       await ref
           .read(userProfileProvider.notifier)
-          .completeOnboarding(username: username, avatarKey: 'default_avatar');
+          .completeOnboarding(username: username, avatarKey: avatarKey);
 
       if (mounted) {
         Navigator.of(
