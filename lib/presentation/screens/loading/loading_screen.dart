@@ -25,7 +25,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
     final isAuthenticated = SupabaseInit.client.auth.currentSession != null;
 
     if (mounted) {
-      context.go(isAuthenticated ? '/' : '/login');
+      // TODO: เปลี่ยนกลับเมื่อทำ login เสร็จ
+      // context.go(isAuthenticated ? '/' : '/login');
+      context.go('/place-bet');
     }
   }
 

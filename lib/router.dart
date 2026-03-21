@@ -31,23 +31,21 @@ final router = GoRouter(
       path: '/home',
       name: 'home',
       builder: (context, state) => const HomeScreen(),
-      routes: [
-        GoRoute(
-          path: 'leaderboard',
-          name: 'leaderboard',
-          builder: (context, state) => const LeaderboardScreen(),
-        ),
-        GoRoute(
-          path: 'place-bet',
-          name: 'place_bet',
-          builder: (context, state) => const PlaceBetScreen(),
-        ),
-        GoRoute(
-          path: 'bet-history',
-          name: 'bet_history',
-          builder: (context, state) => const BetHistoryScreen(),
-        ),
-      ],
+    ),
+    GoRoute(
+      path: '/leaderboard',
+      name: 'leaderboard',
+      builder: (context, state) => const LeaderboardScreen(),
+    ),
+    GoRoute(
+      path: '/place-bet',
+      name: 'place_bet',
+      builder: (context, state) => const PlaceBetScreen(),
+    ),
+    GoRoute(
+      path: '/bet-history',
+      name: 'bet_history',
+      builder: (context, state) => const BetHistoryScreen(),
     ),
   ],
   redirect: (context, state) {
