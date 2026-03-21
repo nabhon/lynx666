@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../domain/providers/providers.dart';
 import '../../../domain/entities/entities.dart';
@@ -39,7 +40,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     final profile = ref.watch(userProfileProvider);
     final latestDraw = ref.watch(latestLotteryDrawProvider);
-    final nextDraw = ref.watch(nextLotteryDrawProvider);
     final countdown = ref.watch(lotteryCountdownProvider);
     final pendingBets = ref.watch(userPendingBetsProvider);
     final betHistory = ref.watch(userBetHistoryProvider());
@@ -85,29 +85,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   /// Header with balance and profile
   Widget _buildHeader(AsyncValue<Profile?> profile) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        // Balance (Top Left)
-        profile.when(
-          data: (data) => _buildBalanceCard(data?.balance ?? 0.0),
-          loading: () => _buildBalanceCard(0.0),
-          error: (_, __) => _buildBalanceCard(0.0),
-        ),
-        
-        // Profile Image (Top Right)
-        profile.when(
-          data: (data) => _buildProfileImage(data),
-          loading: () => _buildProfileImage(null),
-          error: (_, __) => _buildProfileImage(null),
-        ),
-      ],
+    return profile.when(
+      data: (data) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Balance (Top Left)
+          _buildBalanceCard(data?.balance ?? 0.0),
+          // Profile Image (Top Right)
+          _buildProfileImage(data),
+        ],
+      ),
+      loading: () => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildBalanceCard(0.0),
+          _buildProfileImage(null),
+        ],
+      ),
+      error: (_, __) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildBalanceCard(0.0),
+          _buildProfileImage(null),
+        ],
+      ),
     );
   }
 
   Widget _buildBalanceCard(double balance) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [Color(0xFFFF9505), Color(0xFFFFB627)],
@@ -747,7 +754,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   String _formatNumber(double value) {
-    final formatter = NumberFormat('#,##0.00', 'th_TH');
+    final formatter = NumberFormat('#,##0', 'th_TH');
     return formatter.format(value);
   }
 

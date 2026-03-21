@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'repository_providers.dart';
@@ -7,15 +10,32 @@ part 'auth_providers.g.dart';
 /// Auth state notifier provider
 @riverpod
 class AuthState extends _$AuthState {
+  StreamSubscription? _authSubscription;
+
   @override
   Future<User?> build() async {
-    // Listen to auth state changes
-    Supabase.instance.client.auth.onAuthStateChange.listen((data) {
-      ref.invalidateSelf();
+    debugPrint('AuthState.build() called');
+    debugPrint('AuthState.build() currentUser: ${Supabase.instance.client.auth.currentUser?.email}');
+    
+    // Listen to auth state changes and invalidate when changed
+    // Only invalidate if the user actually changes (not on initial emit)
+    User? previousUser = Supabase.instance.client.auth.currentUser;
+    _authSubscription = Supabase.instance.client.auth.onAuthStateChange.listen((data) {
+      debugPrint('AuthState: onAuthStateChange event - ${data.event}');
+      final currentUser = Supabase.instance.client.auth.currentUser;
+      debugPrint('AuthState: previousUser: ${previousUser?.email}, currentUser: ${currentUser?.email}');
+      // Only invalidate if user changed
+      if (currentUser?.id != previousUser?.id) {
+        previousUser = currentUser;
+        debugPrint('AuthState: invalidating self');
+        ref.invalidateSelf();
+      }
     });
 
     // Return current user
-    return Supabase.instance.client.auth.currentUser;
+    final user = Supabase.instance.client.auth.currentUser;
+    debugPrint('AuthState.build() returning: ${user?.email}');
+    return user;
   }
 
   /// Sign in with email and password

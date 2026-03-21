@@ -13,7 +13,7 @@ class LeaderboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final leaderboardAsync = ref.watch(leaderboardProvider());
-    final currentUser = ref.watch(authStateProvider).value;
+    final currentUserAsync = ref.watch(authStateProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -32,8 +32,9 @@ class LeaderboardScreen extends ConsumerWidget {
 
           final topThree = allEntries.take(3).toList();
           final remaining = allEntries.skip(3).take(7).toList(); // 4-10
-          
+
           // Find current user
+          final currentUser = currentUserAsync.value;
           final currentUserEntry = allEntries.firstWhere(
             (e) => currentUser != null && e.id == currentUser.id,
             orElse: () => allEntries.first,
@@ -50,7 +51,7 @@ class LeaderboardScreen extends ConsumerWidget {
                   currentUserId: currentUser?.id,
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Current user rank (if not in top 10)
                 if (!isInTop10 && currentUser != null)
                   Padding(
@@ -76,13 +77,13 @@ class LeaderboardScreen extends ConsumerWidget {
                       ],
                     ),
                   ),
-                
+
                 // Remaining users (4-10)
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     children: remaining.map((entry) {
-                      final isCurrentUser = currentUser != null && 
+                      final isCurrentUser = currentUser != null &&
                           entry.id == currentUser.id;
                       return LeaderboardItem(
                         entry: entry,
