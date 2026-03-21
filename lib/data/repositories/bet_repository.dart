@@ -1,5 +1,3 @@
-import 'dart:developer' as dev;
-
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/entities/entities.dart';
 import '../models/models.dart';
@@ -46,36 +44,16 @@ class BetRepository implements IBetRepository {
       payload.remove('id');
     }
 
-    dev.log('=== PLACE BET DEBUG ===');
-    dev.log('userId: $userId');
-    dev.log('lotteryDrawId: $lotteryDrawId');
-    dev.log('selectedNumbers: $selectedNumbers');
-    dev.log('betAmount: $betAmount');
-    dev.log('payload: $payload');
+    final response = await _supabase
+        .from('bets')
+        .insert(payload)
+        .select()
+        .single();
 
-    try {
-      final response = await _supabase
-          .from('bets')
-          .insert(payload)
-          .select()
-          .single();
+    // Update user's balance
+    await _deductBalance(userId, betAmount);
 
-      dev.log('INSERT SUCCESS response: $response');
-
-      // Update user's balance
-      await _deductBalance(userId, betAmount);
-      dev.log('DEDUCT BALANCE SUCCESS: -$betAmount');
-
-      final result = BetModel.fromSupabase(response).toEntity();
-      dev.log('RESULT bet id: ${result.id}');
-      dev.log('=== END PLACE BET ===');
-
-      return result;
-    } catch (e, stackTrace) {
-      dev.log('INSERT FAILED: $e');
-      dev.log('STACK: $stackTrace');
-      rethrow;
-    }
+    return BetModel.fromSupabase(response).toEntity();
   }
 
   @override
