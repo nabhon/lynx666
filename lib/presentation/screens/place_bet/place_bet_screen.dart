@@ -13,6 +13,41 @@ class PlaceBetScreen extends ConsumerStatefulWidget {
   ConsumerState<PlaceBetScreen> createState() => _PlaceBetScreenState();
 }
 
+// Pre-built constants to avoid re-allocation during slider drags
+const _kSliderTheme = SliderThemeData(
+  activeTrackColor: Color(0xFFFFB627),
+  inactiveTrackColor: Color(0xFFF0F0F0),
+  thumbColor: Color(0xFFFFB627),
+  overlayColor: Color(0x33FFB627),
+  trackHeight: 8,
+  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 14),
+  overlayShape: RoundSliderOverlayShape(overlayRadius: 24),
+);
+
+const _kSelectedChipDecoration = BoxDecoration(
+  color: Color(0xFFFFB627),
+  borderRadius: BorderRadius.all(Radius.circular(20)),
+  border: Border.fromBorderSide(BorderSide(color: Color(0xFFFF9505))),
+);
+
+const _kUnselectedChipDecoration = BoxDecoration(
+  color: Color(0xFFF5F5F5),
+  borderRadius: BorderRadius.all(Radius.circular(20)),
+  border: Border.fromBorderSide(BorderSide(color: Color(0xFFE0E0E0))),
+);
+
+const _kSelectedChipTextStyle = TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.w600,
+  color: Colors.white,
+);
+
+const _kUnselectedChipTextStyle = TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.w600,
+  color: Color(0xFF757575),
+);
+
 class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
   final List<int> _selectedNumbers = [0, 0, 0, 0, 0, 0];
   final ValueNotifier<double> _betPercentage = ValueNotifier<double>(0);
@@ -225,61 +260,83 @@ class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
               width: 1.5,
             ),
           ),
-          child: ValueListenableBuilder<double>(
-            valueListenable: _betPercentage,
-            builder: (context, percentage, _) {
-              final coinAmount = (balance * percentage / 100).floor();
-              return Column(
+          child: RepaintBoundary(
+            child: ValueListenableBuilder<double>(
+              valueListenable: _betPercentage,
+              builder: (context, percentage, child) {
+                final coinAmount = (balance * percentage / 100).floor();
+                return Column(
+                  children: [
+                    // Percentage display
+                    Text(
+                      '${percentage.round()}%',
+                      style: TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                        color: percentage > 0
+                            ? const Color(0xFFFFB627)
+                            : const Color(0xFF9E9E9E),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '$coinAmount coin',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF757575),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Slider — theme is a top-level const, not rebuilt
+                    SliderTheme(
+                      data: _kSliderTheme,
+                      child: Slider(
+                        value: percentage,
+                        min: 0,
+                        max: 50,
+                        divisions: 50,
+                        onChanged: (value) {
+                          _betPercentage.value = value;
+                        },
+                      ),
+                    ),
+
+                    // Static labels passed via child (never rebuilt)
+                    child!,
+
+                    // Quick select buttons — use pre-built decorations
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [10, 20, 30, 40, 50].map((pct) {
+                        final isSelected = percentage == pct;
+                        return GestureDetector(
+                          onTap: () =>
+                              _betPercentage.value = pct.toDouble(),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
+                            decoration: isSelected
+                                ? _kSelectedChipDecoration
+                                : _kUnselectedChipDecoration,
+                            child: Text(
+                              '$pct%',
+                              style: isSelected
+                                  ? _kSelectedChipTextStyle
+                                  : _kUnselectedChipTextStyle,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                );
+              },
+              // Static portion — built once, reused every frame
+              child: const Column(
                 children: [
-                  // Percentage display
-                  Text(
-                    '${percentage.round()}%',
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      color: percentage > 0
-                          ? const Color(0xFFFFB627)
-                          : const Color(0xFF9E9E9E),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '$coinAmount coin',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF757575),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Slider
-                  SliderTheme(
-                    data: SliderThemeData(
-                      activeTrackColor: const Color(0xFFFFB627),
-                      inactiveTrackColor: const Color(0xFFF0F0F0),
-                      thumbColor: const Color(0xFFFFB627),
-                      overlayColor:
-                          const Color(0xFFFFB627).withValues(alpha: 0.2),
-                      trackHeight: 8,
-                      thumbShape: const RoundSliderThumbShape(
-                          enabledThumbRadius: 14),
-                      overlayShape: const RoundSliderOverlayShape(
-                          overlayRadius: 24),
-                    ),
-                    child: Slider(
-                      value: percentage,
-                      min: 0,
-                      max: 50,
-                      divisions: 50,
-                      onChanged: (value) {
-                        _betPercentage.value = value;
-                      },
-                    ),
-                  ),
-
-                  // Labels
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -303,47 +360,10 @@ class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 12),
-
-                  // Quick select buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [10, 20, 30, 40, 50].map((pct) {
-                      final isSelected = percentage == pct;
-                      return GestureDetector(
-                        onTap: () =>
-                            _betPercentage.value = pct.toDouble(),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 8),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? const Color(0xFFFFB627)
-                                : const Color(0xFFF5F5F5),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: isSelected
-                                  ? const Color(0xFFFF9505)
-                                  : const Color(0xFFE0E0E0),
-                            ),
-                          ),
-                          child: Text(
-                            '$pct%',
-                            style: TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: isSelected
-                                  ? Colors.white
-                                  : const Color(0xFF757575),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
+                  SizedBox(height: 12),
                 ],
-              );
-            },
+              ),
+            ),
           ),
         ),
       ],
