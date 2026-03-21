@@ -1,4 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 import '../../data/datasources/supabase_client.dart';
 import '../../domain/entities/entities.dart';
 import 'repository_providers.dart';
@@ -60,7 +64,8 @@ class UserProfile extends _$UserProfile {
     required String username,
     required String avatarKey,
   }) async {
-    final userId = ref.read(currentUserIdProvider);
+    // Get user ID directly from Supabase auth
+    final userId = SupabaseInit.client.auth.currentUser?.id;
     if (userId == null) throw Exception('Not authenticated');
 
     state = const AsyncValue.loading();
@@ -76,6 +81,27 @@ class UserProfile extends _$UserProfile {
 
   /// Check if onboarding is complete
   bool get isOnboardingComplete => state.value?.isOnboardingComplete ?? false;
+
+  /// Upload avatar image to Supabase storage
+  Future<String> uploadAvatar(Uint8List imageBytes) async {
+    // Get user ID directly from Supabase auth
+    final userId = SupabaseInit.client.auth.currentUser?.id;
+    if (userId == null) throw Exception('Not authenticated');
+
+    // Generate unique filename
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final avatarKey = 'avatars/$userId/$timestamp.png';
+
+    // Upload to Supabase storage
+    final bucket = SupabaseInit.client.storage.from('profile_avatar');
+    await bucket.uploadBinary(
+      avatarKey,
+      imageBytes,
+      fileOptions: FileOptions(contentType: 'image/png'),
+    );
+
+    return avatarKey;
+  }
 }
 
 /// Onboarding status provider
@@ -114,12 +140,12 @@ class AvatarUrl extends _$AvatarUrl {
   String? build() {
     final profile = ref.watch(userProfileProvider);
     final avatarKey = profile.value?.avatarKey;
-    
+
     if (avatarKey == null || avatarKey.isEmpty) return null;
-    
+
     // Cache the URL as long as the key doesn't change
     return SupabaseInit.client.storage
-        .from('avatars')
+        .from('profile_avatar')
         .getPublicUrl(avatarKey);
   }
 }

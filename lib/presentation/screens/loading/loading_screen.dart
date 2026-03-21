@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../data/datasources/supabase_client.dart';
+import '../../../router.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -18,14 +18,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   Future<void> _checkAuthAndNavigate() async {
-    // Small delay to ensure Supabase client is ready
-    await Future.delayed(const Duration(milliseconds: 3000));
+    // Small delay to show loading animation
+    await Future.delayed(const Duration(milliseconds: 1000));
 
-    // Check authentication status
-    final isAuthenticated = SupabaseInit.client.auth.currentSession != null;
+    // Use the middleware to check authentication and get redirect route
+    final redirectRoute = checkAuthAndRedirect();
 
     if (mounted) {
-      context.go(isAuthenticated ? '/' : '/login');
+      // Navigate to the appropriate route based on auth status
+      context.go(redirectRoute);
     }
   }
 
@@ -33,7 +34,17 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 24),
+            Text(
+              'Loading...',
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
       ),
     );
   }

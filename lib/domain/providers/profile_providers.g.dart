@@ -36,7 +36,7 @@ final class UserProfileProvider
   UserProfile create() => UserProfile();
 }
 
-String _$userProfileHash() => r'9aeb154ff20061b0d6b0c2ca31eaa753b40d51e7';
+String _$userProfileHash() => r'c59414b321ec023095ef9b3c93e79d19afa922c8';
 
 /// User profile provider - fetches current user's profile
 
@@ -201,7 +201,7 @@ final class AvatarUrlProvider extends $NotifierProvider<AvatarUrl, String?> {
   }
 }
 
-String _$avatarUrlHash() => r'1a298bd901f1dbb1f1bcc81eecc952f1b43ee1f1';
+String _$avatarUrlHash() => r'1a22e09a78670250bfe30d3193b8dc85bba3e998';
 
 /// Avatar URL provider - transforms avatarKey to public URL (cached)
 

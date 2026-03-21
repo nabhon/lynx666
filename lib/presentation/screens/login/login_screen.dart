@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:go_router/go_router.dart'; // ใช้ redirect
+import 'package:go_router/go_router.dart';
+
+import '../../../router.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
     /// ถ้า login อยู่แล้ว เข้าแอปเลย
     final user = _supabase.auth.currentUser;
     if (user != null) {
-      Future.microtask(() => context.go('/home'));
+      Future.microtask(() => _navigateAfterLogin());
     }
   }
 
@@ -34,6 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<void> _navigateAfterLogin() async {
+    final route = await getRouteAfterLogin();
+    if (mounted) {
+      context.go(route);
+    }
   }
 
   Future<void> _login() async {
@@ -50,11 +59,9 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await _supabase.auth.signInWithPassword(email: email, password: password);
 
-      _showSnackBar("เข้าสู่ระบบสำเร็จ");
+      // Navigate based on auth and onboarding status
+      await _navigateAfterLogin();
 
-      // เข้าแอป
-      context.go('/home');
-      
     } on AuthException catch (e) {
       _showSnackBar("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
     } catch (e) {
@@ -65,9 +72,15 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showSnackBar(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.fromLTRB(16, 0, 16, 100),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
   }
 
   @override
@@ -195,6 +208,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               "เข้าสู่ระบบ",
                               style: TextStyle(
                                 fontSize: 16,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w600,
                                 letterSpacing: 0.3,
                               ),

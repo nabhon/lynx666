@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:typed_data';
 
+import '../../../../data/datasources/supabase_client.dart';
 import '../../../../domain/providers/profile_providers.dart';
-import '../../../../domain/providers/auth_providers.dart';
+import '../../../../domain/providers/repository_providers.dart';
 
 class UsernameSetupScreen extends ConsumerStatefulWidget {
   const UsernameSetupScreen({super.key});
@@ -75,17 +78,54 @@ class _UsernameSetupScreenState extends ConsumerState<UsernameSetupScreen> {
     setState(() => _isLoading = true);
 
     try {
-      await ref
-          .read(userProfileProvider.notifier)
-          .completeOnboarding(username: username, avatarKey: 'default_avatar');
+      String avatarKey = 'default_avatar';
 
-      if (mounted) {
-        Navigator.of(
-          context,
-        ).pushNamedAndRemoveUntil('/home', (route) => false);
+      // Upload avatar if user selected one
+      if (_imageBytes != null) {
+        try {
+          // Upload avatar using repository directly (doesn't rely on ref after async)
+          final userId = SupabaseInit.client.auth.currentUser?.id;
+          if (userId == null) throw Exception('Not authenticated');
+
+          final timestamp = DateTime.now().millisecondsSinceEpoch;
+          avatarKey = 'avatars/$userId/$timestamp.png';
+
+          final bucket = SupabaseInit.client.storage.from('profile_avatar');
+          await bucket.uploadBinary(
+            avatarKey,
+            _imageBytes!,
+            fileOptions: FileOptions(contentType: 'image/png'),
+          );
+        } catch (uploadError) {
+          print('Upload error: $uploadError');
+          // Continue with default avatar if upload fails
+          avatarKey = 'default_avatar';
+        }
       }
+
+      // Check mounted after async gap
+      if (!mounted) return;
+
+      // Use repository directly instead of notifier
+      final repository = ref.read(profileRepositoryProvider);
+      final userId = SupabaseInit.client.auth.currentUser?.id;
+      if (userId == null) throw Exception('Not authenticated');
+
+      await repository.completeOnboarding(
+        userId: userId,
+        username: username,
+        avatarKey: avatarKey,
+      );
+
+      // Check mounted after async gap before navigation
+      if (!mounted) return;
+
+      context.go('/home');
     } catch (e) {
-      _showError('เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง');
+      print('Onboarding error: $e');
+      if (mounted) {
+        _showError('เกิดข้อผิดพลาด: ${e.toString()}');
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
