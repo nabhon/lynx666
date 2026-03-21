@@ -602,6 +602,84 @@ $$ LANGUAGE plpgsql;
 -- Initialize the first draw on migration
 SELECT initialize_draw_schedule();
 
+-- ============ TRIGGER: Auto-create profile on user signup ============
+
+-- Function to generate random 8-character username (letters + numbers)
+CREATE OR REPLACE FUNCTION public.generate_random_username()
+RETURNS TEXT 
+LANGUAGE plpgsql 
+SECURITY DEFINER SET search_path = ''
+AS $$
+DECLARE
+  chars TEXT := 'abcdefghijklmnopqrstuvwxyz0123456789';
+  result TEXT := '';
+  i INTEGER := 0;
+  is_unique BOOLEAN := FALSE;
+BEGIN
+  WHILE NOT is_unique LOOP
+    result := '';
+    FOR i IN 1..8 LOOP
+      result := result || substring(chars from floor(random() * length(chars) + 1)::integer for 1);
+    END LOOP;
+
+    -- CRITICAL FIX: Added 'public.' schema prefix here
+    SELECT NOT EXISTS (
+      SELECT 1 FROM public.profiles WHERE username = result
+    ) INTO is_unique;
+  END LOOP;
+
+  RETURN result;
+END;
+$$;
+
+-- Trigger function to create profile on new user signup
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER SET search_path = ''
+AS $$
+DECLARE
+  v_username TEXT;
+BEGIN
+  -- Generate unique 8-character username using the qualified function
+  v_username := public.generate_random_username();
+
+  -- Insert new profile with default values
+  -- (Assuming 'id' references auth.users(id) and is a UUID)
+  INSERT INTO public.profiles (
+    id,
+    email,
+    username,
+    avatar_key,
+    balance,
+    status,
+    is_onboarding_complete,
+    created_at,
+    updated_at
+  ) VALUES (
+    NEW.id,
+    NEW.email,
+    v_username,
+    NULL,
+    10000,
+    'ACTIVE'::public.profile_status,
+    FALSE,
+    NOW(),
+    NOW()
+  );
+
+  RETURN NEW;
+END;
+$$;
+
+-- Trigger the function every time a user is created
+-- Drop the trigger first just in case you are updating it
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
 -- ============ ROW LEVEL SECURITY (RLS) ============
 
 -- Enable RLS
