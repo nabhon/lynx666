@@ -9,6 +9,7 @@ import 'presentation/screens/home/home_screen.dart';
 import 'presentation/screens/leaderboard/leaderboard_screen.dart';
 import 'presentation/screens/place_bet/place_bet_screen.dart';
 import 'presentation/screens/bet_history/bet_history_screen.dart';
+import 'presentation/screens/register/register_screen.dart';
 
 /// Middleware to check authentication status on app boot.
 /// Returns the route to navigate to based on auth status.
@@ -71,7 +72,7 @@ String? authGuard(BuildContext context, GoRouterState state) {
   final isAuthenticated = session != null;
   
   // List of public routes that don't require auth
-  final publicRoutes = ['/login', '/loading'];
+  final publicRoutes = ['/login', '/register', '/loading'];
   final isPublicRoute = publicRoutes.any((route) => 
     state.matchedLocation.startsWith(route)
   );
@@ -102,6 +103,11 @@ final router = GoRouter(
       path: '/login',
       name: 'login',
       builder: (context, state) => const LoginScreen(),
+    ),
+    GoRoute(
+      path: '/register',
+      name: 'register',
+      builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
       path: '/onboarding',
