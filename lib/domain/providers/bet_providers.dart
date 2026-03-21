@@ -111,13 +111,19 @@ class PlaceBet extends _$PlaceBet {
     required List<int> selectedNumbers,
     required double betAmount,
   }) async {
+    // Track disposal BEFORE any async gap
+    var isDisposed = false;
+    ref.onDispose(() => isDisposed = true);
+
     final userId = ref.read(currentUserIdProvider);
     if (userId == null) throw Exception('Not authenticated');
+
+    // Capture repository before async gap
+    final repository = ref.read(betRepositoryProvider);
 
     state = const AsyncValue.loading();
 
     final result = await AsyncValue.guard(() async {
-      final repository = ref.read(betRepositoryProvider);
       return await repository.placeBet(
         userId: userId,
         lotteryDrawId: lotteryDrawId,
@@ -125,6 +131,9 @@ class PlaceBet extends _$PlaceBet {
         betAmount: betAmount,
       );
     });
+
+    // Provider was disposed during await — don't touch ref/state
+    if (isDisposed) return result.value;
 
     state = AsyncValue.data(result.value);
 

@@ -332,7 +332,7 @@ final class PlaceBetProvider extends $AsyncNotifierProvider<PlaceBet, Bet?> {
   PlaceBet create() => PlaceBet();
 }
 
-String _$placeBetHash() => r'325e4be16609f1da2bcb36c97c226866a97f043f';
+String _$placeBetHash() => r'9fdf47a58fb048aec50fc426416c0f9ee6ddaf74';
 
 /// Place bet provider - handles placing a new bet
 

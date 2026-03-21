@@ -68,8 +68,6 @@ class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
   }
 
   Future<void> _onConfirm() async {
-    final balance = ref.read(profileBalanceProvider);
-
     if (_betPercentage.value <= 0 || _betAmount <= 0) {
       _showSnackBar('กรุณาเลือกจำนวน coin ที่ต้องการเดิมพัน');
       return;
@@ -81,13 +79,18 @@ class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
       return;
     }
 
+    // Capture values before async gap to avoid using ref after dispose
+    final notifier = ref.read(placeBetProvider.notifier);
+    final amount = _betAmount;
+    final numbers = List<int>.from(_selectedNumbers);
+
     setState(() => _isSubmitting = true);
 
     try {
-      await ref.read(placeBetProvider.notifier).placeBet(
+      await notifier.placeBet(
             lotteryDrawId: nextDraw.id,
-            selectedNumbers: List.from(_selectedNumbers),
-            betAmount: _betAmount,
+            selectedNumbers: numbers,
+            betAmount: amount,
           );
 
       if (mounted) {
