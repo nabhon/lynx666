@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../domain/entities/leaderboard_entry.dart';
+import '../../../../data/datasources/supabase_client.dart';
 
 class LeaderboardItem extends StatelessWidget {
   final LeaderboardEntry entry;
@@ -11,6 +12,32 @@ class LeaderboardItem extends StatelessWidget {
     required this.entry,
     this.isCurrentUser = false,
   });
+
+  String? _getAvatarUrl(String? avatarKey) {
+    if (avatarKey == null || avatarKey.isEmpty) return null;
+    return SupabaseInit.client.storage.from('profile_avatar').getPublicUrl(avatarKey);
+  }
+
+  Widget _buildAvatar() {
+    final avatarUrl = _getAvatarUrl(entry.avatarKey);
+    
+    if (avatarUrl != null) {
+      return ClipOval(
+        child: Image.network(
+          avatarUrl,
+          width: 48,
+          height: 48,
+          fit: BoxFit.cover,
+          errorBuilder: (_, __, ___) => _buildDefaultAvatar(),
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return _buildDefaultAvatar();
+          },
+        ),
+      );
+    }
+    return _buildDefaultAvatar();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +62,7 @@ class LeaderboardItem extends StatelessWidget {
             CircleAvatar(
               radius: 24,
               backgroundColor: AppColors.primary,
-              child: entry.avatarKey != null
-                  ? ClipOval(
-                      child: Image.network(
-                        entry.avatarKey!,
-                        width: 48,
-                        height: 48,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _buildDefaultAvatar(),
-                      ),
-                    )
-                  : _buildDefaultAvatar(),
+              child: _buildAvatar(),
             ),
             const SizedBox(width: 16),
             

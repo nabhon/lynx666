@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/entities/entities.dart';
+import '../../../domain/providers/providers.dart';
 import 'widgets/bet_history_tile.dart';
 
 class BetHistoryScreen extends ConsumerStatefulWidget {
@@ -13,15 +14,12 @@ class BetHistoryScreen extends ConsumerStatefulWidget {
 class _BetHistoryScreenState extends ConsumerState<BetHistoryScreen> {
   BetStatus? _filter;
 
-  List<Bet> _getFilteredBets() {
-    return [];
-  }
-
   @override
   Widget build(BuildContext context) {
-    final bets = _getFilteredBets();
+    final betsAsync = ref.watch(userBetHistoryProvider(filter: _filter));
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFAFAFA),
       appBar: AppBar(
         centerTitle: true,
         title: const Row(
@@ -29,7 +27,7 @@ class _BetHistoryScreenState extends ConsumerState<BetHistoryScreen> {
           children: [
             Icon(Icons.history_rounded, size: 24),
             SizedBox(width: 8),
-            Text('ประวัติการแทง', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+            Text('ประวัติการแทง', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20, color: Colors.white)),
           ],
         ),
         elevation: 0,
@@ -40,9 +38,13 @@ class _BetHistoryScreenState extends ConsumerState<BetHistoryScreen> {
           child: _buildFilters(),
         ),
       ),
-      body: bets.isEmpty
-          ? const Center(child: Text('ยังไม่มีประวัติการแทง'))
-          : _buildListView(bets),
+      body: betsAsync.when(
+        data: (bets) => bets.isEmpty
+            ? const Center(child: Text('ยังไม่มีประวัติการแทง'))
+            : _buildListView(bets),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(child: Text('Error: $error')),
+      ),
     );
   }
 
