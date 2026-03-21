@@ -55,26 +55,30 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         email: email,
         password: password,
       );
-
-      // ถ้าสำเร็จ insert profile
-      final user = _supabase.auth.currentUser;
-      if (user != null) {
-        await _supabase.from('profiles').insert({
-          'id': user.id,
-          'email': email,
-          'is_onboarding_complete': false,
-        });
-
-        _showSnackBar("สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบ");
-        if (mounted) {
-          context.go('/login');
-        }
-      } else {
-        _showSnackBar("สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
-      }
-
     } catch (e) {
       _showSnackBar("อีเมลนี้ถูกใช้งานแล้วหรือข้อมูลไม่ถูกต้อง");
+      return;
+    }
+
+    // signUp สำเร็จ → insert profile
+    final user = _supabase.auth.currentUser;
+    if (user == null) {
+      _showSnackBar("สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง");
+      return;
+    }
+
+    try {
+      await _supabase.from('profiles').insert({
+        'id': user.id,
+        'email': email,
+        'is_onboarding_complete': false,
+      });
+    } catch (e) {
+      // profile insert อาจล้มเหลว (เช่น trigger สร้างให้แล้ว) — ไม่ block การสมัคร
+    }
+
+    if (mounted) {
+      context.go('/login');
     }
   }
 
