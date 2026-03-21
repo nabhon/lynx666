@@ -869,7 +869,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   String _formatDate(DateTime date) {
-    final formatter = DateFormat('dd/MM/yy', 'th_TH');
+    final formatter = DateFormat('dd/MM/yy');
     return formatter.format(date);
   }
 }
