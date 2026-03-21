@@ -9,7 +9,6 @@ import 'presentation/screens/place_bet/place_bet_screen.dart';
 import 'presentation/screens/bet_history/bet_history_screen.dart';
 
 final router = GoRouter(
-  // Start with the login screen, then redirect based on auth status
   initialLocation: '/loading',
   routes: [
     GoRoute(
@@ -31,7 +30,7 @@ final router = GoRouter(
       path: '/home',
       name: 'home',
       builder: (context, state) => const HomeScreen(),
-      routes: [
+       routes: [
         GoRoute(
           path: 'leaderboard',
           name: 'leaderboard',
