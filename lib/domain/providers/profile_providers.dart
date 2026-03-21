@@ -1,4 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import '../../data/datasources/supabase_client.dart';
 import '../../domain/entities/entities.dart';
 import 'repository_providers.dart';
 import 'auth_providers.dart';
@@ -97,7 +98,28 @@ class OnboardingStatus extends _$OnboardingStatus {
 }
 
 /// Profile balance provider (derived from UserProfile)
-final profileBalanceProvider = Provider<double>((ref) {
-  final profile = ref.watch(userProfileProvider);
-  return profile.value?.balance ?? 0.0;
-});
+@riverpod
+class ProfileBalance extends _$ProfileBalance {
+  @override
+  double build() {
+    final profile = ref.watch(userProfileProvider);
+    return profile.value?.balance ?? 0.0;
+  }
+}
+
+/// Avatar URL provider - transforms avatarKey to public URL (cached)
+@riverpod
+class AvatarUrl extends _$AvatarUrl {
+  @override
+  String? build() {
+    final profile = ref.watch(userProfileProvider);
+    final avatarKey = profile.value?.avatarKey;
+    
+    if (avatarKey == null || avatarKey.isEmpty) return null;
+    
+    // Cache the URL as long as the key doesn't change
+    return SupabaseInit.client.storage
+        .from('avatars')
+        .getPublicUrl(avatarKey);
+  }
+}

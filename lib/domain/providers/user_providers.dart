@@ -71,9 +71,13 @@ class UserStatsProvider extends _$UserStatsProvider {
 }
 
 /// Current user's stats provider
-final currentUserStatsProvider = Provider.family<UserStats?, String>((ref, userId) {
-  return ref.watch(userStatsProviderProvider(userId)).value;
-});
+@riverpod
+class CurrentUserStatsProvider extends _$CurrentUserStatsProvider {
+  @override
+  UserStats? build(String userId) {
+    return ref.watch(userStatsProviderProvider(userId)).value;
+  }
+}
 
 /// User by ID provider
 @riverpod
