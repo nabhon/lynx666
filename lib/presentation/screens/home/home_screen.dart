@@ -132,15 +132,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               GestureDetector(
                 onTap: () => context.goNamed('leaderboard'),
                 child: Container(
-                  width: 40,
-                  height: 56,
+                  width: 50,
+                  height: 50,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
                       colors: [Color(0xFFFFB627), Color(0xFFFF9505)],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
-                    borderRadius: BorderRadius.circular(8),
+                    shape: BoxShape.circle,
                   ),
                   child: const Icon(
                     Icons.emoji_events,
@@ -164,8 +164,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                width: 40,
-                height: 56,
+                width: 50,
+                height: 50,
                 child: Icon(Icons.emoji_events, color: Colors.white),
               ),
               SizedBox(width: 8),
@@ -186,8 +186,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               SizedBox(
-                width: 40,
-                height: 56,
+                width: 50,
+                height: 50,
                 child: Icon(Icons.emoji_events, color: Colors.white),
               ),
               SizedBox(width: 8),
