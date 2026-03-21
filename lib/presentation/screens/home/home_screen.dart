@@ -18,6 +18,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   late Timer _timer;
+  Duration? _previousCountdown;
 
   @override
   void initState() {
@@ -26,8 +27,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         ref.invalidate(lotteryCountdownProvider);
+        _checkCountdownReachedZero();
       }
     });
+  }
+
+  /// Check if countdown just reached zero and refresh draw data
+  void _checkCountdownReachedZero() {
+    final countdown = ref.read(lotteryCountdownProvider);
+    
+    // Check if countdown just reached zero (was positive, now is zero)
+    if (countdown == Duration.zero && (_previousCountdown ?? Duration.zero) > Duration.zero) {
+      // Refresh the draw providers to get new data
+      ref.invalidate(latestLotteryDrawProvider);
+      ref.invalidate(nextLotteryDrawProvider);
+    }
+    
+    _previousCountdown = countdown;
   }
 
   @override

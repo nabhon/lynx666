@@ -53,11 +53,10 @@ class NextLotteryDraw extends _$NextLotteryDraw {
 class LotteryCountdown extends _$LotteryCountdown {
   @override
   Duration build() {
-    // This will be updated by a timer in the UI
     final nextDraw = ref.watch(nextLotteryDrawProvider);
     final draw = nextDraw.value;
     if (draw == null) return Duration.zero;
-    
+
     final duration = draw.scheduledTime.difference(DateTime.now());
     return duration.isNegative ? Duration.zero : duration;
   }
