@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -14,32 +13,63 @@ class PlaceBetScreen extends ConsumerStatefulWidget {
   ConsumerState<PlaceBetScreen> createState() => _PlaceBetScreenState();
 }
 
+// Pre-built constants to avoid re-allocation during slider drags
+const _kSliderTheme = SliderThemeData(
+  activeTrackColor: Color(0xFFFFB627),
+  inactiveTrackColor: Color(0xFFF0F0F0),
+  thumbColor: Color(0xFFFFB627),
+  overlayColor: Color(0x33FFB627),
+  trackHeight: 8,
+  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 14),
+  overlayShape: RoundSliderOverlayShape(overlayRadius: 24),
+);
+
+const _kSelectedChipDecoration = BoxDecoration(
+  color: Color(0xFFFFB627),
+  borderRadius: BorderRadius.all(Radius.circular(20)),
+  border: Border.fromBorderSide(BorderSide(color: Color(0xFFFF9505))),
+);
+
+const _kUnselectedChipDecoration = BoxDecoration(
+  color: Color(0xFFF5F5F5),
+  borderRadius: BorderRadius.all(Radius.circular(20)),
+  border: Border.fromBorderSide(BorderSide(color: Color(0xFFE0E0E0))),
+);
+
+const _kSelectedChipTextStyle = TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.w600,
+  color: Colors.white,
+);
+
+const _kUnselectedChipTextStyle = TextStyle(
+  fontSize: 13,
+  fontWeight: FontWeight.w600,
+  color: Color(0xFF757575),
+);
+
 class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
   final List<int> _selectedNumbers = [0, 0, 0, 0, 0, 0];
-  final TextEditingController _amountController = TextEditingController();
+  final ValueNotifier<double> _betPercentage = ValueNotifier<double>(0);
   bool _isSubmitting = false;
 
   @override
   void dispose() {
-    _amountController.dispose();
+    _betPercentage.dispose();
     super.dispose();
   }
 
   String get _selectedNumbersText =>
       _selectedNumbers.map((n) => n.toString()).join('');
 
-  double get _betAmount => double.tryParse(_amountController.text) ?? 0;
+  double get _betAmount {
+    final balance = ref.read(profileBalanceProvider);
+    return (balance * _betPercentage.value / 100).floorToDouble();
+  }
 
   Future<void> _onConfirm() async {
-    final balance = ref.read(profileBalanceProvider);
-
-    if (_betAmount <= 0) {
-      _showSnackBar('กรุณาใส่จำนวน coin');
-      return;
-    }
-
-    if (_betAmount > balance) {
-      _showSnackBar('coin ไม่เพียงพอ');
+    if (_betPercentage.value <= 0 || _betAmount <= 0) {
+      _showSnackBar('กรุณาเลือกจำนวน coin ที่ต้องการเดิมพัน');
       return;
     }
 
@@ -49,16 +79,23 @@ class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
       return;
     }
 
+    // Capture values before async gap to avoid using ref after dispose
+    final notifier = ref.read(placeBetProvider.notifier);
+    final amount = _betAmount;
+    final numbers = List<int>.from(_selectedNumbers);
+
     setState(() => _isSubmitting = true);
 
     try {
-      await ref.read(placeBetProvider.notifier).placeBet(
+      await notifier.placeBet(
             lotteryDrawId: nextDraw.id,
-            selectedNumbers: List.from(_selectedNumbers),
-            betAmount: _betAmount,
+            selectedNumbers: numbers,
+            betAmount: amount,
           );
 
       if (mounted) {
+        // Refresh profile/balance ก่อน navigate เพื่อให้ home เห็น coin ที่หักแล้ว
+        ref.invalidate(userProfileProvider);
         _showSnackBar('วางเดิมพันสำเร็จ!', isError: false);
         context.go('/home');
       }
@@ -204,11 +241,13 @@ class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
   }
 
   Widget _buildAmountInput() {
+    final balance = ref.watch(profileBalanceProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'จำนวน coin',
+          'จำนวน coin ที่ใช้เดิมพัน',
           style: TextStyle(
             color: Color(0xFF1A1A1A),
             fontSize: 18,
@@ -217,43 +256,117 @@ class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
         ),
         const SizedBox(height: 12),
         Container(
+          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: const Color(0xFFE0E0E0),
               width: 1.5,
             ),
           ),
-          child: TextField(
-            controller: _amountController,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            onChanged: (_) => setState(() {}),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF1A1A1A),
-            ),
-            decoration: InputDecoration(
-              hintText: 'ใส่จำนวน coin',
-              hintStyle: const TextStyle(
-                color: Color(0xFF9E9E9E),
-                fontWeight: FontWeight.normal,
-              ),
-              suffixText: 'coin',
-              suffixStyle: const TextStyle(
-                color: Color(0xFFFFB627),
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
-              filled: false,
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 16,
+          child: RepaintBoundary(
+            child: ValueListenableBuilder<double>(
+              valueListenable: _betPercentage,
+              builder: (context, percentage, child) {
+                final coinAmount = (balance * percentage / 100).floor();
+                return Column(
+                  children: [
+                    // Percentage display
+                    Text(
+                      '${percentage.round()}%',
+                      style: TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                        color: percentage > 0
+                            ? const Color(0xFFFFB627)
+                            : const Color(0xFF9E9E9E),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '$coinAmount coin',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF757575),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Slider — theme is a top-level const, not rebuilt
+                    SliderTheme(
+                      data: _kSliderTheme,
+                      child: Slider(
+                        value: percentage,
+                        min: 0,
+                        max: 50,
+                        divisions: 50,
+                        onChanged: (value) {
+                          _betPercentage.value = value;
+                        },
+                      ),
+                    ),
+
+                    // Static labels passed via child (never rebuilt)
+                    child!,
+
+                    // Quick select buttons — use pre-built decorations
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [10, 20, 30, 40, 50].map((pct) {
+                        final isSelected = percentage == pct;
+                        return GestureDetector(
+                          onTap: () =>
+                              _betPercentage.value = pct.toDouble(),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
+                            decoration: isSelected
+                                ? _kSelectedChipDecoration
+                                : _kUnselectedChipDecoration,
+                            child: Text(
+                              '$pct%',
+                              style: isSelected
+                                  ? _kSelectedChipTextStyle
+                                  : _kUnselectedChipTextStyle,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                );
+              },
+              // Static portion — built once, reused every frame
+              child: const Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '0%',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF9E9E9E),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Text(
+                          '50%',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF9E9E9E),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 12),
+                ],
               ),
             ),
           ),
@@ -323,25 +436,35 @@ class _PlaceBetScreenState extends ConsumerState<PlaceBetScreen> {
             valueColor: const Color(0xFF1A1A1A),
           ),
 
-          if (_betAmount > 0) ...[
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8),
-              child: Divider(color: Color(0xFFE0E0E0)),
-            ),
-            _buildSummaryRow(
-              'เดิมพัน',
-              '${_betAmount.toStringAsFixed(0)} coin',
-              valueColor: const Color(0xFFFF9505),
-            ),
-            const SizedBox(height: 4),
-            _buildSummaryRow(
-              'คงเหลือหลังเดิมพัน',
-              '${(balance - _betAmount).toStringAsFixed(0)} coin',
-              valueColor: balance - _betAmount >= 0
-                  ? const Color(0xFF1A1A1A)
-                  : const Color(0xFFE53935),
-            ),
-          ],
+          ValueListenableBuilder<double>(
+            valueListenable: _betPercentage,
+            builder: (context, percentage, _) {
+              final betAmt =
+                  (balance * percentage / 100).floorToDouble();
+              if (betAmt <= 0) return const SizedBox.shrink();
+              return Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Divider(color: Color(0xFFE0E0E0)),
+                  ),
+                  _buildSummaryRow(
+                    'เดิมพัน',
+                    '${betAmt.toStringAsFixed(0)} coin',
+                    valueColor: const Color(0xFFFF9505),
+                  ),
+                  const SizedBox(height: 4),
+                  _buildSummaryRow(
+                    'คงเหลือหลังเดิมพัน',
+                    '${(balance - betAmt).toStringAsFixed(0)} coin',
+                    valueColor: balance - betAmt >= 0
+                        ? const Color(0xFF1A1A1A)
+                        : const Color(0xFFE53935),
+                  ),
+                ],
+              );
+            },
+          ),
 
           // Next draw info
           nextDraw.when(

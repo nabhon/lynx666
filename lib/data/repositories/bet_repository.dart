@@ -37,10 +37,16 @@ class BetRepository implements IBetRepository {
     );
 
     final model = BetModel.fromEntity(bet);
+    final payload = model.toSupabase();
+
+    // Remove empty id so DB can auto-generate UUID
+    if (payload['id'] == null || payload['id'] == '') {
+      payload.remove('id');
+    }
 
     final response = await _supabase
         .from('bets')
-        .insert(model.toSupabase())
+        .insert(payload)
         .select()
         .single();
 
@@ -203,24 +209,33 @@ class BetRepository implements IBetRepository {
 
   /// Deduct amount from user's balance
   Future<void> _deductBalance(String userId, double amount) async {
-    // Use RPC call for atomic balance update
-    await _supabase.rpc(
-      'update_balance',
-      params: {
-        'user_id': userId,
-        'amount': -amount,
-      },
-    );
+    final profile = await _supabase
+        .from('profiles')
+        .select('balance')
+        .eq('id', userId)
+        .single();
+
+    final currentBalance = (profile['balance'] as num).toDouble();
+
+    await _supabase
+        .from('profiles')
+        .update({'balance': currentBalance - amount})
+        .eq('id', userId);
   }
 
   /// Credit amount to user's balance
   Future<void> _creditBalance(String userId, double amount) async {
-    await _supabase.rpc(
-      'update_balance',
-      params: {
-        'user_id': userId,
-        'amount': amount,
-      },
-    );
+    final profile = await _supabase
+        .from('profiles')
+        .select('balance')
+        .eq('id', userId)
+        .single();
+
+    final currentBalance = (profile['balance'] as num).toDouble();
+
+    await _supabase
+        .from('profiles')
+        .update({'balance': currentBalance + amount})
+        .eq('id', userId);
   }
 }
