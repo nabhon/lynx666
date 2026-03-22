@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../domain/providers/providers.dart';
 import '../../../domain/entities/entities.dart';
@@ -440,6 +439,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   /// Countdown Timer Section
   Widget _buildCountdownTimer(Duration countdown) {
+    if (countdown == Duration.zero) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAFAFA),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Color(0xFFFFB627),
+              ),
+            ),
+            SizedBox(width: 8),
+            Text(
+              'กำลังออกผล...',
+              style: TextStyle(
+                color: Color(0xFFFFB627),
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     final formatter = DateFormat('HH:mm:ss');
     final formattedTime = formatter.format(
       DateTime(0, 1, 1, countdown.inHours,
@@ -775,13 +807,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  'งวด: ${_formatDate(bet.createdAt)}',
-                  style: const TextStyle(
-                    color: Color(0xFF9E9E9E),
-                    fontSize: 11,
-                  ),
-                ),
+                _buildDrawNumberLabel(bet.lotteryDrawId),
               ],
             ),
           ),
@@ -791,7 +817,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '฿${_formatNumber(bet.betAmount)}',
+                '${_formatNumber(bet.betAmount)} coin',
                 style: const TextStyle(
                   color: Color(0xFF757575),
                   fontSize: 12,
@@ -800,7 +826,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               if (isWin && bet.actualWinAmount != null)
                 Text(
-                  '+฿${_formatNumber(bet.actualWinAmount!)}',
+                  '+${_formatNumber(bet.actualWinAmount!)} coin',
                   style: const TextStyle(
                     color: Color(0xFFFFB627),
                     fontSize: 12,
@@ -820,6 +846,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDrawNumberLabel(String lotteryDrawId) {
+    final drawAsync = ref.watch(lotteryDrawByIdProvider(lotteryDrawId));
+    return drawAsync.when(
+      data: (draw) => Text(
+        draw != null ? 'งวดที่ #${draw.drawNumber}' : '',
+        style: const TextStyle(
+          color: Color(0xFF9E9E9E),
+          fontSize: 11,
+        ),
+      ),
+      loading: () => const Text(
+        '...',
+        style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 11),
+      ),
+      error: (_, __) => const SizedBox.shrink(),
     );
   }
 
@@ -868,8 +912,4 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return formatter.format(value);
   }
 
-  String _formatDate(DateTime date) {
-    final formatter = DateFormat('dd/MM/yy');
-    return formatter.format(date);
-  }
 }

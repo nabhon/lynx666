@@ -80,7 +80,7 @@ class LeaderboardItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${entry.totalWins} wins • ฿${entry.lifetimeWinnings.toStringAsFixed(2)}',
+                    '${entry.totalWins} wins • ${entry.lifetimeWinnings.toStringAsFixed(0)} coin',
                     style: TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary,
@@ -95,7 +95,7 @@ class LeaderboardItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '฿${entry.balance.toStringAsFixed(2)}',
+                  '${entry.balance.toStringAsFixed(0)} coin',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

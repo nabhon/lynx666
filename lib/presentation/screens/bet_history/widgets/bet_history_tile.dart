@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../domain/entities/entities.dart';
+import '../../../../domain/providers/lottery_providers.dart';
 
-class BetHistoryTile extends StatelessWidget {
+class BetHistoryTile extends ConsumerWidget {
   final Bet bet;
 
   const BetHistoryTile({super.key, required this.bet});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final numberString = bet.selectedNumbers
         .take(6)
         .map((n) => n.toString())
@@ -17,7 +18,7 @@ class BetHistoryTile extends StatelessWidget {
     // กำหนดสีตาม status
     Color numberColor;
     String statusText;
-    
+
     if (bet.isWon) {
       numberColor = Colors.green[700]!;
       statusText = 'ถูกรางวัล!';
@@ -28,6 +29,8 @@ class BetHistoryTile extends StatelessWidget {
       numberColor = Colors.orange[700]!;
       statusText = 'รอผลรางวัล...';
     }
+
+    final drawAsync = ref.watch(lotteryDrawByIdProvider(bet.lotteryDrawId));
 
     return Column(
       children: [
@@ -63,19 +66,19 @@ class BetHistoryTile extends StatelessWidget {
 
               // ยอดเงิน
               Text(
-                'ยอดแทง: ฿${bet.betAmount.toStringAsFixed(2)}',
+                'ยอดแทง: ${bet.betAmount.toStringAsFixed(0)} coin',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF4A5A60),
                 ),
               ),
-              
+
               // แสดงยอดถูกรางวัล (ถ้ามี)
               if (bet.actualWinAmount != null && bet.isWon) ...[
                 const SizedBox(height: 2),
                 Text(
-                  'ถูก: ฿${bet.actualWinAmount!.toStringAsFixed(2)}',
+                  'ถูก: ${bet.actualWinAmount!.toStringAsFixed(0)} coin',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -83,21 +86,28 @@ class BetHistoryTile extends StatelessWidget {
                   ),
                 ),
               ],
-              
+
               const SizedBox(height: 2),
 
-              // วันที่และเวลา
-              Text(
-                DateFormat('dd/MM/yyyy HH:mm').format(bet.createdAt),
-                style: TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey.shade500,
+              // งวดที่
+              drawAsync.when(
+                data: (draw) => Text(
+                  draw != null ? 'งวดที่ #${draw.drawNumber}' : '',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.grey.shade500,
+                  ),
                 ),
+                loading: () => Text(
+                  '...',
+                  style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
+                ),
+                error: (_, __) => const SizedBox.shrink(),
               ),
             ],
           ),
         ),
-        
+
         Divider(
           height: 1,
           thickness: 0.5,

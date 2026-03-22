@@ -103,7 +103,7 @@ class TopThreePodium extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              '฿${_formatBalance(entry.balance)}',
+              '${_formatBalance(entry.balance)} coin',
               style: TextStyle(
                 fontSize: rank == 1 ? 14 : 12,
                 fontWeight: FontWeight.bold,
