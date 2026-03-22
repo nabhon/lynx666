@@ -90,15 +90,36 @@ class BetHistoryTile extends ConsumerWidget {
 
               const SizedBox(height: 2),
 
-              // งวดที่
+              // งวดที่ + เลขที่ออก
               drawAsync.when(
-                data: (draw) => Text(
-                  draw != null ? 'งวดที่ #${draw.drawNumber}' : '',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade500,
-                  ),
-                ),
+                data: (draw) {
+                  if (draw == null) return const SizedBox.shrink();
+                  final winNumbers = draw.winningNumbers;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'งวดที่ #${draw.drawNumber}',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                      if (winNumbers != null && winNumbers.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          'เลขที่ออก: ${winNumbers.join(' ')}',
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade600,
+                            fontFamily: 'monospace',
+                          ),
+                        ),
+                      ],
+                    ],
+                  );
+                },
                 loading: () => Text(
                   '...',
                   style: TextStyle(fontSize: 13, color: Colors.grey.shade500),
