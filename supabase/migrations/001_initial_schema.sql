@@ -305,18 +305,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Function: Count matching numbers
+-- Function: Count matching numbers (exact position match)
 CREATE OR REPLACE FUNCTION count_matches(
   selected INTEGER[],
   winning INTEGER[]
 )
 RETURNS INTEGER AS $$
+DECLARE
+  i INTEGER;
+  matches INTEGER := 0;
 BEGIN
-  RETURN (
-    SELECT COUNT(*)::INTEGER
-    FROM UNNEST(selected) AS s(num)
-    WHERE num = ANY(winning)
-  );
+  FOR i IN 1..array_length(selected, 1) LOOP
+    IF selected[i] = winning[i] THEN
+      matches := matches + 1;
+    END IF;
+  END LOOP;
+  RETURN matches;
 END;
 $$ LANGUAGE plpgsql;
 
