@@ -735,9 +735,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
+  /// Returns the set of indices in selectedNumbers that are highlighted wins
+  /// based on the winCriteria (front = first N, back = last N).
+  Set<int> _winningIndices(Bet bet) {
+    final criteria = bet.winCriteria;
+    if (criteria == null || !bet.isWon) return {};
+    final total = bet.selectedNumbers.length;
+    switch (criteria) {
+      case WinCriteria.match6:
+        return List.generate(total, (i) => i).toSet();
+      case WinCriteria.match5:
+        return List.generate(total > 5 ? 5 : total, (i) => i).toSet();
+      case WinCriteria.match4:
+        return List.generate(total > 4 ? 4 : total, (i) => i).toSet();
+      case WinCriteria.match3Front:
+        return {0, 1, 2};
+      case WinCriteria.match3Back:
+        return {total - 3, total - 2, total - 1};
+      case WinCriteria.match2Front:
+        return {0, 1};
+      case WinCriteria.match2Back:
+        return {total - 2, total - 1};
+    }
+  }
+
   Widget _buildBetHistoryItem(Bet bet) {
     final isWin = bet.status == BetStatus.won;
     final isLost = bet.status == BetStatus.lost;
+    final highlightedIndices = _winningIndices(bet);
+    final drawAsync = ref.watch(lotteryDrawByIdProvider(bet.lotteryDrawId));
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -753,105 +779,109 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ),
       ),
       child: Row(
-        children: [
-          // Status Icon
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: isWin
-                  ? const Color(0xFFFFB627).withValues(alpha: 0.2)
-                  : isLost
-                      ? const Color(0xFFDC2626).withValues(alpha: 0.2)
-                      : const Color(0xFFE0E0E0),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              isWin ? Icons.check : isLost ? Icons.close : Icons.pending,
-              color: isWin
-                  ? const Color(0xFFFFB627)
-                  : isLost
-                      ? const Color(0xFFDC2626)
-                      : const Color(0xFF9E9E9E),
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-
-          // Numbers
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    for (var number in bet.selectedNumbers)
-                      Container(
-                        margin: const EdgeInsets.only(right: 4),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF0F0F0),
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        child: Text(
-                          number.toString(),
-                          style: const TextStyle(
-                            color: Color(0xFF1A1A1A),
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                _buildDrawNumberLabel(bet.lotteryDrawId),
-              ],
-            ),
-          ),
-
-          // Amount and Result
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                '${formatCoin(bet.betAmount)} coin',
-                style: const TextStyle(
-                  color: Color(0xFF757575),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+              // Status Icon
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: isWin
+                      ? const Color(0xFFFFB627).withValues(alpha: 0.2)
+                      : isLost
+                          ? const Color(0xFFDC2626).withValues(alpha: 0.2)
+                          : const Color(0xFFE0E0E0),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  isWin ? Icons.check : isLost ? Icons.close : Icons.pending,
+                  color: isWin
+                      ? const Color(0xFFFFB627)
+                      : isLost
+                          ? const Color(0xFFDC2626)
+                          : const Color(0xFF9E9E9E),
+                  size: 20,
                 ),
               ),
-              if (isWin && bet.actualWinAmount != null)
-                Text(
-                  '+${formatCoin(bet.actualWinAmount!)} coin',
-                  style: const TextStyle(
-                    color: Color(0xFFFFB627),
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              else if (isLost)
-                const Text(
-                  'เสีย',
-                  style: TextStyle(
-                    color: Color(0xFFDC2626),
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
+              const SizedBox(width: 12),
+
+              // Numbers + draw label
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        for (var i = 0; i < bet.selectedNumbers.length; i++)
+                          Container(
+                            margin: const EdgeInsets.only(right: 4),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: highlightedIndices.contains(i)
+                                  ? const Color(0xFFFFB627)
+                                  : const Color(0xFFF0F0F0),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              bet.selectedNumbers[i].toString(),
+                              style: TextStyle(
+                                color: highlightedIndices.contains(i)
+                                    ? Colors.white
+                                    : const Color(0xFF1A1A1A),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    _buildDrawNumberLabel(drawAsync),
+                    _buildDrawWinningNumbers(drawAsync),
+                  ],
                 ),
+              ),
+
+              // Amount and Result
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    '${formatCoin(bet.betAmount)} coin',
+                    style: const TextStyle(
+                      color: Color(0xFF757575),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  if (isWin && bet.actualWinAmount != null)
+                    Text(
+                      '+${formatCoin(bet.actualWinAmount!)} coin',
+                      style: const TextStyle(
+                        color: Color(0xFFFFB627),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  else if (isLost)
+                    const Text(
+                      'ไม่ถูกรางวัล',
+                      style: TextStyle(
+                        color: Color(0xFFDC2626),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                ],
+              ),
             ],
-          ),
-        ],
       ),
     );
   }
 
-  Widget _buildDrawNumberLabel(String lotteryDrawId) {
-    final drawAsync = ref.watch(lotteryDrawByIdProvider(lotteryDrawId));
+  Widget _buildDrawNumberLabel(AsyncValue<LotteryDraw?> drawAsync) {
     return drawAsync.when(
       data: (draw) => Text(
         draw != null ? 'งวดที่ #${draw.drawNumber}' : '',
@@ -864,6 +894,41 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         '...',
         style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 11),
       ),
+      error: (_, __) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildDrawWinningNumbers(AsyncValue<LotteryDraw?> drawAsync) {
+    return drawAsync.when(
+      data: (draw) {
+        final numbers = draw?.winningNumbers;
+        if (numbers == null || numbers.isEmpty) return const SizedBox.shrink();
+        return Row(
+            children: [
+              const Text(
+                'เลขที่ออก: ',
+                style: TextStyle(
+                  color: Color(0xFF9E9E9E),
+                  fontSize: 11,
+                ),
+              ),
+              for (var number in numbers)
+                Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: Text(
+                    number.toString(),
+                    style: const TextStyle(
+                      color: Color(0xFF757575),
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'monospace',
+                    ),
+                  ),
+                ),
+            ],
+        );
+      },
+      loading: () => const SizedBox.shrink(),
       error: (_, __) => const SizedBox.shrink(),
     );
   }
