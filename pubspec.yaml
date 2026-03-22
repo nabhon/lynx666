@@ -91,6 +91,7 @@ flutter:
   assets:
     - .env
     - assets/L.png
+    - assets/fonts/
 
 flutter_launcher_icons:
     android: true

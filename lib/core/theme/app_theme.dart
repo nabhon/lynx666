@@ -32,12 +32,12 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: AppColors.background,
     textTheme: GoogleFonts.kanitTextTheme(),
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       centerTitle: true,
       elevation: 0,
       backgroundColor: AppColors.background,
       foregroundColor: AppColors.text,
-      titleTextStyle: TextStyle(
+      titleTextStyle: GoogleFonts.kanit(
         color: AppColors.text,
         fontSize: 20,
         fontWeight: FontWeight.w600,
@@ -59,7 +59,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        textStyle: const TextStyle(
+        textStyle: GoogleFonts.kanit(
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
