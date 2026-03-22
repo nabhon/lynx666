@@ -478,11 +478,11 @@ BEGIN
       prize_amount := bet_record.bet_amount * get_prize_multiplier(win_crit);
       v_total_prize_pool := v_total_prize_pool + prize_amount;
 
-      -- Find matched numbers for audit
+      -- Find matched numbers for audit (positional match)
       SELECT ARRAY(
-        SELECT UNNEST(bet_record.selected_numbers)
-        INTERSECT
-        SELECT UNNEST(draw_record.winning_numbers)
+        SELECT bet_record.selected_numbers[i]
+        FROM generate_subscripts(bet_record.selected_numbers, 1) AS i
+        WHERE bet_record.selected_numbers[i] = draw_record.winning_numbers[i]
       ) INTO matched_numbers;
 
       -- Update bet
