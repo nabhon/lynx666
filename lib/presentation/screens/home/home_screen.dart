@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/utils/coin_formatter.dart';
 import '../../../domain/providers/providers.dart';
 import '../../../domain/entities/entities.dart';
 
@@ -226,7 +227,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ),
           Text(
-            '${_formatNumber(balance)}',
+            '${formatCoin(balance)}',
             style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -817,7 +818,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '${_formatNumber(bet.betAmount)} coin',
+                '${formatCoin(bet.betAmount)} coin',
                 style: const TextStyle(
                   color: Color(0xFF757575),
                   fontSize: 12,
@@ -826,7 +827,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               if (isWin && bet.actualWinAmount != null)
                 Text(
-                  '+${_formatNumber(bet.actualWinAmount!)} coin',
+                  '+${formatCoin(bet.actualWinAmount!)} coin',
                   style: const TextStyle(
                     color: Color(0xFFFFB627),
                     fontSize: 12,
@@ -905,11 +906,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         );
       },
     );
-  }
-
-  String _formatNumber(double value) {
-    final formatter = NumberFormat('#,##0', 'th_TH');
-    return formatter.format(value);
   }
 
 }

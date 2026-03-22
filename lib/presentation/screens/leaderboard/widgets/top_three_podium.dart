@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/coin_formatter.dart';
 import '../../../../domain/entities/leaderboard_entry.dart';
 import '../../../../data/datasources/supabase_client.dart';
 
@@ -103,7 +104,7 @@ class TopThreePodium extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(
-              '${_formatBalance(entry.balance)} coin',
+              '${formatCoin(entry.balance)} coin',
               style: TextStyle(
                 fontSize: rank == 1 ? 14 : 12,
                 fontWeight: FontWeight.bold,
@@ -176,12 +177,4 @@ class TopThreePodium extends StatelessWidget {
     );
   }
 
-  String _formatBalance(double balance) {
-    if (balance >= 1000000) {
-      return '${(balance / 1000000).toStringAsFixed(1)}M';
-    } else if (balance >= 1000) {
-      return '${(balance / 1000).toStringAsFixed(1)}K';
-    }
-    return balance.toStringAsFixed(0);
-  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/coin_formatter.dart';
 import '../../../../domain/entities/leaderboard_entry.dart';
 import '../../../../data/datasources/supabase_client.dart';
 
@@ -80,7 +81,7 @@ class LeaderboardItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${entry.totalWins} wins • ${entry.lifetimeWinnings.toStringAsFixed(0)} coin',
+                    '${entry.totalWins} wins',
                     style: TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary,
@@ -95,7 +96,7 @@ class LeaderboardItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  '${entry.balance.toStringAsFixed(0)} coin',
+                  '${formatCoin(entry.balance)} coin',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,

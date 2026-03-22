@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/utils/coin_formatter.dart';
 import '../../../../domain/entities/entities.dart';
 import '../../../../domain/providers/lottery_providers.dart';
 
@@ -66,7 +67,7 @@ class BetHistoryTile extends ConsumerWidget {
 
               // ยอดเงิน
               Text(
-                'ยอดแทง: ${bet.betAmount.toStringAsFixed(0)} coin',
+                'ยอดแทง: ${formatCoin(bet.betAmount)} coin',
                 style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
@@ -78,7 +79,7 @@ class BetHistoryTile extends ConsumerWidget {
               if (bet.actualWinAmount != null && bet.isWon) ...[
                 const SizedBox(height: 2),
                 Text(
-                  'ถูก: ${bet.actualWinAmount!.toStringAsFixed(0)} coin',
+                  'ถูก: ${formatCoin(bet.actualWinAmount!)} coin',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
